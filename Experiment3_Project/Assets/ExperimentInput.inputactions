@@ -1,0 +1,54 @@
+{
+    "name": "ExperimentInput",
+    "maps": [
+        {
+            "name": "Experiment Input",
+            "id": "480feef3-71f0-4b8e-8bed-40b12b89df9c",
+            "actions": [
+                {
+                    "name": "Respond Target 1 Present",
+                    "type": "Button",
+                    "id": "e8fa8f7e-e11a-4baf-b38c-e57d762d5d77",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Respond Target 2 Present",
+                    "type": "Button",
+                    "id": "5046e495-c757-4ae2-ac03-9014bbec5155",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a1500664-19fd-4fb7-b28f-85213f00262d",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respond Target 1 Present",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1face998-d3a8-4f01-bc1f-a393da4570d3",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respond Target 2 Present",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
