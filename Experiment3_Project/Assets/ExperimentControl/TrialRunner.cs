@@ -13,21 +13,24 @@ public class TrialRunner : MonoBehaviour
     int response;
     bool trialPassed = true;
 
-    StimuliController[] stimuliArray;
+    StimuliController[] stimuliArrayAll;
+    [SerializeField] int[] arrayConfiguration;
+    List<StimuliController> selectedStimuliArray = new();
+
 
     StimuliController loomingStim;
     StimuliController recedingStim;
     StimuliController targetStim;
-    [SerializeField] int targetType;
+    int targetType;
 
     Trial currentTrial;
 
     void Start()
     {
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
-        stimuliArray = arrayHolder.GetComponentsInChildren<StimuliController>();
+        stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
 
-        DisplayStimuli(false);
+        DisplayStimuli(false, stimuliArrayAll);
     }
 
     void Update()
@@ -47,10 +50,12 @@ public class TrialRunner : MonoBehaviour
     // Main Trial Loop
     public IEnumerator BeginTrialLoop()
     {
+        Debug.Break();
         LoadTrialData();
         DisplayStimuli(true);
+        yield return new WaitForEndOfFrame();
         ProcessStimuliMovement();
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
         DisplayStimuli(false);
         DisplayTargets(true);
         yield return StartCoroutine(AwaitResponse());
@@ -58,22 +63,32 @@ public class TrialRunner : MonoBehaviour
         CleanUp();
     }
 
-
     private void LoadTrialData()
     {
+        selectedStimuliArray.Clear();
+        foreach (int index in arrayConfiguration)
+        {
+            selectedStimuliArray.Add(stimuliArrayAll[index]);
+        }
+
         Settings tinfo = currentTrial.settings;
-        loomingStim = stimuliArray[tinfo.GetInt("loomingStimIndex")];
-        recedingStim = stimuliArray[tinfo.GetInt("recedingStimIndex")];
-        targetStim = stimuliArray[tinfo.GetInt("targetLocationIndex")];
+        loomingStim = stimuliArrayAll[tinfo.GetInt("loomingStimIndex")];
+        recedingStim = stimuliArrayAll[tinfo.GetInt("recedingStimIndex")];
+        targetStim = stimuliArrayAll[tinfo.GetInt("targetLocationIndex")];
         targetType = tinfo.GetInt("targetType");
+    }
+
+    private void DisplayStimuli(bool toggle, StimuliController[] array)
+    {
+        foreach (StimuliController stim in array)
+        {
+            stim.DisplayMesh(toggle);
+        }
     }
 
     private void DisplayStimuli(bool toggle)
     {
-        foreach (StimuliController stim in stimuliArray)
-        {
-            stim.DisplayMesh(toggle);
-        }
+        DisplayStimuli(toggle, selectedStimuliArray.ToArray());
     }
 
     private void ProcessStimuliMovement()
@@ -85,7 +100,7 @@ public class TrialRunner : MonoBehaviour
     // Shows / hides target and all distractors
     private void DisplayTargets(bool toggle)
     {
-        foreach (StimuliController stim in stimuliArray)
+        foreach (StimuliController stim in selectedStimuliArray)
         {
             if (stim != targetStim)
             {

@@ -5,6 +5,8 @@ using UnityEngine;
 public class StimuliController : MonoBehaviour
 {
     Animator animator;
+    [SerializeField] AnimationClip loomingMotion;
+    [SerializeField] AnimationClip receedingMotion;
 
     MeshRenderer mesh;
 
@@ -40,11 +42,12 @@ public class StimuliController : MonoBehaviour
 
     public void PlayLooming()
     {
-        animator.SetTrigger("Loom");
+        //animator.SetTrigger("Loom");
+        animator.Play(loomingMotion.name);
     }
 
     public void PlayReceding()
     {
-        animator.SetTrigger("Recede");
+        animator.Play(receedingMotion.name);
     }
 }

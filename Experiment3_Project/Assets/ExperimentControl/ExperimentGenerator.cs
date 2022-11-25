@@ -16,7 +16,7 @@ public class ExperimentGenerator : MonoBehaviour
         Trial newTrial5 = testBlock.CreateTrial();
         Trial newTrial6 = testBlock.CreateTrial();
 
-        SetTrialParameters(newTrial, 1, 3, 3, 1);
+        SetTrialParameters(newTrial, 0, 2, 4, 1);
         SetTrialParameters(newTrial2, 2, 4, 4, 2);
         SetTrialParameters(newTrial3, 3, 5, 3, 1);
         SetTrialParameters(newTrial4, 4, 0, 4, 2);
