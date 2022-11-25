@@ -398,7 +398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: fddbcf97956705845ac69c5d3dfb8b31,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -409,12 +409,50 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 327941627}
+        m_TargetAssemblyTypeName: TrialRunner, Assembly-CSharp
+        m_MethodName: CheckInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e8fa8f7e-e11a-4baf-b38c-e57d762d5d77
+    m_ActionName: Experiment Input/Respond Target 1 Present[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 327941627}
+        m_TargetAssemblyTypeName: TrialRunner, Assembly-CSharp
+        m_MethodName: CheckInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5046e495-c757-4ae2-ac03-9014bbec5155
+    m_ActionName: Experiment Input/Respond Target 2 Present[/Keyboard/p]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Experiment Input
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!4 &284974553 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4522850482104986, guid: 0a3b6392f04558844bd340e68ced1ff9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1919139133}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &295055905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -677,8 +715,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 470592971}
-  m_RootOrder: 0
+  m_Father: {fileID: 284974553}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &371903025 stripped
 Transform:
@@ -714,7 +752,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 327941628}
   - {fileID: 2023404775}
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -2085,7 +2122,7 @@ Transform:
   m_Children:
   - {fileID: 1280216598}
   m_Father: {fileID: 470592971}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2336786630069384372
 PrefabInstance:

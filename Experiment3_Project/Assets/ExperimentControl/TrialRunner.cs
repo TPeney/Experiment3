@@ -9,7 +9,6 @@ public class TrialRunner : MonoBehaviour
 {
     [SerializeField] InputActionProperty respondedTarg1Action;
     [SerializeField] InputActionProperty respondedTarg2Action;
-    bool respondedTarg1; bool respondedTarg2;
     int response;
     bool trialPassed = true;
 
@@ -17,11 +16,14 @@ public class TrialRunner : MonoBehaviour
     [SerializeField] int[] arrayConfiguration;
     List<StimuliController> selectedStimuliArray = new();
 
-
     StimuliController loomingStim;
     StimuliController recedingStim;
     StimuliController targetStim;
     int targetType;
+
+    bool waitingForResponse = false;
+    double startTime;
+    double endTime;
 
     Trial currentTrial;
 
@@ -30,12 +32,7 @@ public class TrialRunner : MonoBehaviour
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
 
-        DisplayStimuli(false, stimuliArrayAll);
-    }
-
-    void Update()
-    {
-        ReadInput();
+        DisplayStimuli(false, stimuliArrayAll);        
     }
 
     public void RunTrial()
@@ -50,7 +47,6 @@ public class TrialRunner : MonoBehaviour
     // Main Trial Loop
     public IEnumerator BeginTrialLoop()
     {
-        Debug.Break();
         LoadTrialData();
         DisplayStimuli(true);
         yield return new WaitForEndOfFrame();
@@ -111,51 +107,45 @@ public class TrialRunner : MonoBehaviour
                 stim.DisplayTarget(toggle, targetType);
             }
         }
+
+        startTime = Time.unscaledTimeAsDouble;
     }
 
     // Coroutine to loop until response is given
     private IEnumerator AwaitResponse()
     {
-        bool responseReceived = false;
+        waitingForResponse = true;
 
-        while (!responseReceived)
+        while (waitingForResponse)
         {
-            responseReceived = CheckInput();
             yield return null;
         }
     }
 
     // Check current response values and save a response if given
-    private bool CheckInput()
+    // Called as Unity Event via the Player Input inspector element
+    public void CheckInput(InputAction.CallbackContext context)
     {
-        if (!respondedTarg1 && !respondedTarg2) { return false; }
+        if (!context.performed) { return ; }
 
-        if (respondedTarg1)
+        if (context.action.name == "Respond Target 1 Present")
         {
             response = 1;
         }
-        else if (respondedTarg2)
+        else if (context.action.name == "Respond Target 2 Present")
         {
             response = 2;
         }
 
+        endTime = context.startTime;
         trialPassed = response == targetType;
-
-        return true;
-    }
-
-    // Reads the current status of the controllers at each update
-    private void ReadInput()
-    {
-        respondedTarg1 = respondedTarg1Action.action.triggered;
-
-        respondedTarg2 = respondedTarg2Action.action.triggered;
+        waitingForResponse = false;
     }
 
     // Saves results data to trial object
     private void SaveResults()
     {
-        //TODO - Add Time data
+        currentTrial.result["RT"] = endTime - startTime;
 
         string trialType;
         if (targetStim == loomingStim) { trialType = "looming"; }
@@ -167,12 +157,10 @@ public class TrialRunner : MonoBehaviour
         currentTrial.result["trialPassed"] = trialPassed;
     }
 
-
     // Resets all objects and values for the next trial
     private void CleanUp()
     {
         DisplayTargets(false);
         Session.instance.EndCurrentTrial();
     }
-
 }
