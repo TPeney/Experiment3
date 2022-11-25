@@ -6,6 +6,8 @@ public class StimuliController : MonoBehaviour
 {
     Animator animator;
 
+    MeshRenderer mesh;
+
     GameObject target1;
     GameObject target2;
     GameObject targetNull;
@@ -17,6 +19,7 @@ public class StimuliController : MonoBehaviour
         targetNull = transform.Find("TargetNull").gameObject;
 
         animator = GetComponent<Animator>();
+        mesh = GetComponent<MeshRenderer>();
 
     }
 
@@ -30,6 +33,11 @@ public class StimuliController : MonoBehaviour
         else { targetNull.SetActive(toggle); }
     }
 
+    public void DisplayMesh(bool toggle)
+    {
+        mesh.enabled = toggle;
+    }
+
     public void PlayLooming()
     {
         animator.SetTrigger("Loom");
@@ -39,5 +47,4 @@ public class StimuliController : MonoBehaviour
     {
         animator.SetTrigger("Recede");
     }
-
 }

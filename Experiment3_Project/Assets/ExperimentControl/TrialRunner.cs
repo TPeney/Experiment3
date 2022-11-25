@@ -26,6 +26,8 @@ public class TrialRunner : MonoBehaviour
     {
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArray = arrayHolder.GetComponentsInChildren<StimuliController>();
+
+        DisplayStimuli(false);
     }
 
     void Update()
@@ -46,7 +48,10 @@ public class TrialRunner : MonoBehaviour
     public IEnumerator BeginTrialLoop()
     {
         LoadTrialData();
+        DisplayStimuli(true);
         ProcessStimuliMovement();
+        yield return new WaitForSeconds(0.3f);
+        DisplayStimuli(false);
         DisplayTargets(true);
         yield return StartCoroutine(AwaitResponse());
         SaveResults();
@@ -61,6 +66,14 @@ public class TrialRunner : MonoBehaviour
         recedingStim = stimuliArray[tinfo.GetInt("recedingStimIndex")];
         targetStim = stimuliArray[tinfo.GetInt("targetLocationIndex")];
         targetType = tinfo.GetInt("targetType");
+    }
+
+    private void DisplayStimuli(bool toggle)
+    {
+        foreach (StimuliController stim in stimuliArray)
+        {
+            stim.DisplayMesh(toggle);
+        }
     }
 
     private void ProcessStimuliMovement()
