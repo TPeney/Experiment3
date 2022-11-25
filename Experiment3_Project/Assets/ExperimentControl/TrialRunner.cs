@@ -65,8 +65,8 @@ public class TrialRunner : MonoBehaviour
 
     private void ProcessStimuliMovement()
     {
-        Debug.Log(loomingStim.gameObject.name + " Looming now");
-        Debug.Log(recedingStim.gameObject.name + " Receding now");
+        loomingStim.PlayLooming();
+        recedingStim.PlayReceding();
     }
 
     // Shows / hides target and all distractors
