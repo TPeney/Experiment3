@@ -13,7 +13,7 @@ public class TrialRunner : MonoBehaviour
     bool trialPassed = true;
 
     StimuliController[] stimuliArrayAll;
-    [SerializeField] int[] arrayConfiguration;
+    List<int> arrayConfiguration = new();
     List<StimuliController> selectedStimuliArray = new();
 
     StimuliController loomingStim;
@@ -61,17 +61,18 @@ public class TrialRunner : MonoBehaviour
 
     private void LoadTrialData()
     {
-        selectedStimuliArray.Clear();
-        foreach (int index in arrayConfiguration)
-        {
-            selectedStimuliArray.Add(stimuliArrayAll[index]);
-        }
-
         Settings tinfo = currentTrial.settings;
         loomingStim = stimuliArrayAll[tinfo.GetInt("loomingStimIndex")];
         recedingStim = stimuliArrayAll[tinfo.GetInt("recedingStimIndex")];
         targetStim = stimuliArrayAll[tinfo.GetInt("targetLocationIndex")];
         targetType = tinfo.GetInt("targetType");
+        arrayConfiguration = tinfo.GetIntList("arrayConfiguration");
+
+        selectedStimuliArray.Clear();
+        foreach (int index in arrayConfiguration)
+        {
+            selectedStimuliArray.Add(stimuliArrayAll[index]);
+        }
     }
 
     private void DisplayStimuli(bool toggle, StimuliController[] array)

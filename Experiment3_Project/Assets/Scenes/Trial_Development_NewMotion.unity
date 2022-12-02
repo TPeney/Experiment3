@@ -702,7 +702,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -1529652789029558040, guid: fddbcf97956705845ac69c5d3dfb8b31,
       type: 3}
-  arrayConfiguration: 000000000100000002000000030000000400000005000000
+  arrayConfiguration: 000000000200000004000000
 --- !u!4 &327941628
 Transform:
   m_ObjectHideFlags: 0
