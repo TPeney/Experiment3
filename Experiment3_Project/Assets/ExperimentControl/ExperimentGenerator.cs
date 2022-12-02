@@ -7,9 +7,11 @@ public class ExperimentGenerator : MonoBehaviour
 {
     bool isDebugging;
 
-    List<int> array3Up = new List<int>() { 0, 2, 4 };
-    List<int> array3Down = new List<int>() { 1, 3, 5 };
-    List<int> array6 = new List<int>() { 0, 1, 2, 3, 4, 5 };
+    readonly List<int> array3Up = new() { 0, 2, 4 };
+    readonly List<int> array3Down = new() { 1, 3, 5 };
+    readonly List<int> array6 = new() { 0, 1, 2, 3, 4, 5 };
+
+    Block testBlock;
 
     public void GenerateExperiment(Session session)
     {
@@ -41,7 +43,7 @@ public class ExperimentGenerator : MonoBehaviour
 
     void GenerateDebugExperiment(Session session)
     {
-        Block testBlock = session.CreateBlock();
+        if (testBlock == null) {  testBlock = session.CreateBlock(); }
 
         for (int i = 0; i < 6; i++)
         {
@@ -51,7 +53,7 @@ public class ExperimentGenerator : MonoBehaviour
         SetTrialParameters(testBlock.trials[0], 0, 2, 4, 1, array3Up);
         SetTrialParameters(testBlock.trials[1], 2, 4, 4, 2, array3Up);
         SetTrialParameters(testBlock.trials[2], 3, 5, 3, 1, array3Down);
-        SetTrialParameters(testBlock.trials[3], 4, 2, 4, 2, array3Down);
+        SetTrialParameters(testBlock.trials[3], 5, 3, 1, 2, array3Down);
         SetTrialParameters(testBlock.trials[4], 5, 1, 3, 1, array6);
         SetTrialParameters(testBlock.trials[5], 0, 2, 4, 2, array6);
     }

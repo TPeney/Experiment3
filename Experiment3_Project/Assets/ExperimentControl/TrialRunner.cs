@@ -9,9 +9,11 @@ public class TrialRunner : MonoBehaviour
 {
     [SerializeField] InputActionProperty respondedTarg1Action;
     [SerializeField] InputActionProperty respondedTarg2Action;
+    [SerializeField] float stimuliMovementDuration = .15f;
     int response;
     bool trialPassed = true;
 
+    LocationCalculator planePoints;
     StimuliController[] stimuliArrayAll;
     List<int> arrayConfiguration = new();
     List<StimuliController> selectedStimuliArray = new();
@@ -29,8 +31,14 @@ public class TrialRunner : MonoBehaviour
 
     void Start()
     {
+        planePoints = FindObjectOfType<LocationCalculator>();
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
+
+        for (int i = 0; i < stimuliArrayAll.Length; i++)
+        {
+            stimuliArrayAll[i].MoveTo(planePoints.midPlanePoints[i]);
+        }
 
         DisplayStimuli(false, stimuliArrayAll);        
     }
@@ -90,8 +98,10 @@ public class TrialRunner : MonoBehaviour
 
     private void ProcessStimuliMovement()
     {
-        loomingStim.PlayLooming();
-        recedingStim.PlayReceding();
+        //loomingStim.PlayLooming();
+        Vector3 start = planePoints.nearPlanePoints[0];
+        Vector3 end = planePoints.midPlanePoints[0];
+        StartCoroutine(recedingStim.MoveTo(start, end, stimuliMovementDuration));
     }
 
     // Shows / hides target and all distractors

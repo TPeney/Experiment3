@@ -5,25 +5,34 @@ using UXF;
 
 public class ExperimentHandler : MonoBehaviour
 {
+    Session exp;
     TrialRunner trialRunner;
+
+    ExperimentGenerator experimentGenerator;
 
     private void Awake()
     {
         trialRunner = FindObjectOfType<TrialRunner>();    
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        exp = Session.instance;
+        experimentGenerator = GetComponent<ExperimentGenerator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Session.instance.hasInitialised && !Session.instance.InTrial)
+        if (!exp.hasInitialised || exp.InTrial) { return; }
+        
+        trialRunner.RunTrial();
+
+        if (exp.CurrentTrial == exp.CurrentBlock.lastTrial)
         {
-            trialRunner.RunTrial();
+            if (exp.settings.GetBool("isDebugging"))
+            {
+                experimentGenerator.GenerateExperiment(exp);
+            }
         }
     }
 }
