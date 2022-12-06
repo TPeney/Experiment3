@@ -14,6 +14,9 @@ public class StimuliController : MonoBehaviour
     GameObject target2;
     GameObject targetNull;
 
+    bool isMoving = false;
+    public bool IsMoving { get { return isMoving; } }
+
     void Start()
     {
         target1 = transform.Find("Target1").gameObject;
@@ -47,29 +50,23 @@ public class StimuliController : MonoBehaviour
 
     public IEnumerator MoveTo(Vector3 start, Vector3 end, float duration)
     {
+        isMoving = true;
+
         float startTime = Time.time;
         float elapsedTime = 0f;
         float progress = 0f;
 
-        // TODO - Fix time, seems to be going too fast
-        // TODO - Flow should wait for this to finish
         while (progress < 1)
         {
             transform.position = Vector3.Lerp(start, end, progress);
-            elapsedTime += Time.time - startTime;
+            elapsedTime = (Time.time - startTime);
             progress = elapsedTime / duration;
+            Debug.Log(startTime + ", " + Time.time + ", = " + elapsedTime);
             yield return null;
         }
-    }
 
-    public void PlayLooming()
-    {
-        //animator.SetTrigger("Loom");
-        animator.Play(loomingMotion.name);
-    }
+        transform.position = end;
 
-    public void PlayReceding()
-    {
-        animator.Play(receedingMotion.name);
+        isMoving = false;
     }
 }

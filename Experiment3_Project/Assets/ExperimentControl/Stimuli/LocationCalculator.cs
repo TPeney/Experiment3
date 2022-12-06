@@ -81,18 +81,26 @@ public class LocationCalculator : MonoBehaviour
 
         // Radius of the circle of points for each plane = Radius of original circle reduced based on distance as a 
         // percentage from starting plane to end plane
+        
         float adjustedR = reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, planeCentre) / actionToTerminationDistance));
+
+        // Far plane now set to mirror near plane - to give angle for looming obj
+        if (planeCentre == farPlaneCentre)
+        {
+            adjustedR = reactionRadius * farPlanePercentDistance;
+        }
 
         // Find each of the 6 stimuli points - 0 is the top of the circle, 3 is the bottom
         planePoints[0] = FindPointOnCircle(planeCentre, adjustedR, 90f);
-        planePoints[1] = FindPointOnCircle(planeCentre, adjustedR, 135f);
-        planePoints[2] = FindPointOnCircle(planeCentre, adjustedR, 225f);
+        planePoints[1] = FindPointOnCircle(planeCentre, adjustedR, 35f);
+        planePoints[2] = FindPointOnCircle(planeCentre, adjustedR, 325f);
         planePoints[3] = FindPointOnCircle(planeCentre, adjustedR, 270f);
-        planePoints[4] = FindPointOnCircle(planeCentre, adjustedR, 315f);
-        planePoints[5] = FindPointOnCircle(planeCentre, adjustedR, 45f);
+        planePoints[4] = FindPointOnCircle(planeCentre, adjustedR, 215f);
+        planePoints[5] = FindPointOnCircle(planeCentre, adjustedR, 145f);
+
     }
 
-   // Find the point on a circles circumference given the starting centre co-ords and the angle
+    // Find the point on a circles circumference given the starting centre co-ords and the angle
     Vector3 FindPointOnCircle(Vector3 centrePoint, float adjustedR, float angle)
     {
         // Angle is given in degrees
@@ -119,8 +127,9 @@ public class LocationCalculator : MonoBehaviour
         UnityEditor.Handles.DrawWireDisc(midPlaneCentre, Vector3.forward,
             reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, midPlaneCentre) / actionToTerminationDistance)));
 
+        // Far Plane is mirror of near plane (for looming objects)
         UnityEditor.Handles.DrawWireDisc(farPlaneCentre, Vector3.forward,
-            reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, farPlaneCentre) / actionToTerminationDistance)));
+            reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, nearPlaneCentre) / actionToTerminationDistance)));
 
         UnityEditor.Handles.DrawWireDisc(terminationPointCentre, Vector3.forward,
             reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, terminationPointCentre) / actionToTerminationDistance)));
@@ -132,6 +141,7 @@ public class LocationCalculator : MonoBehaviour
                 Gizmos.color = Color.red;
                 Gizmos.DrawCube(point, new Vector3(.05f, .05f, .05f));
             }
+
         }
     }
 }

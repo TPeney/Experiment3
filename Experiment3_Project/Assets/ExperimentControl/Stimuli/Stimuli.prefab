@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8579705833062564416
 RectTransform:
   m_ObjectHideFlags: 0
@@ -185,7 +185,6 @@ GameObject:
   - component: {fileID: 6248629089287845928}
   - component: {fileID: 824378694209848279}
   - component: {fileID: 3605067464277506126}
-  - component: {fileID: 6149208835070706046}
   m_Layer: 0
   m_Name: Stimuli
   m_TagString: Untagged
@@ -287,26 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a7a4d2afa65e7547b82f4941c4bc2b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &6149208835070706046
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1174118381149892136}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c4e562d122b1bb54482eec5f12f03f40, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  loomingMotion: {fileID: 0}
+  receedingMotion: {fileID: 0}
 --- !u!1 &4203518335390758473
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ public class TrialRunner : MonoBehaviour
 {
     [SerializeField] InputActionProperty respondedTarg1Action;
     [SerializeField] InputActionProperty respondedTarg2Action;
+
+    [Header("Duration of receding / looming movements (in seconds)")]
     [SerializeField] float stimuliMovementDuration = .15f;
     int response;
     bool trialPassed = true;
@@ -58,7 +60,7 @@ public class TrialRunner : MonoBehaviour
         LoadTrialData();
         DisplayStimuli(true);
         yield return new WaitForEndOfFrame();
-        ProcessStimuliMovement();
+        yield return StartCoroutine(ProcessStimuliMovement());
         yield return new WaitForSeconds(0.5f);
         DisplayStimuli(false);
         DisplayTargets(true);
@@ -96,12 +98,24 @@ public class TrialRunner : MonoBehaviour
         DisplayStimuli(toggle, selectedStimuliArray.ToArray());
     }
 
-    private void ProcessStimuliMovement()
+    private IEnumerator ProcessStimuliMovement()
     {
-        //loomingStim.PlayLooming();
-        Vector3 start = planePoints.nearPlanePoints[0];
-        Vector3 end = planePoints.midPlanePoints[0];
-        StartCoroutine(recedingStim.MoveTo(start, end, stimuliMovementDuration));
+        int recedingIndex = Array.IndexOf(stimuliArrayAll, recedingStim);
+        int loomingIndex = Array.IndexOf(stimuliArrayAll, loomingStim);
+    
+        Vector3 recedeStart = planePoints.nearPlanePoints[recedingIndex];
+        Vector3 recedeEnd = planePoints.midPlanePoints[recedingIndex];
+
+        Vector3 loomStart = planePoints.farPlanePoints[loomingIndex];
+        Vector3 loomEnd = planePoints.midPlanePoints[loomingIndex];
+
+        StartCoroutine(recedingStim.MoveTo(recedeStart, recedeEnd, stimuliMovementDuration));
+        StartCoroutine(loomingStim.MoveTo(loomStart, loomEnd, stimuliMovementDuration));
+
+        while(recedingStim.IsMoving || loomingStim.IsMoving)
+        {
+            yield return null;
+        }
     }
 
     // Shows / hides target and all distractors

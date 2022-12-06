@@ -22,8 +22,6 @@ public class ExperimentGenerator : MonoBehaviour
             GenerateDebugExperiment(session);
             return;
         }
-
-
     }
 
     void SetTrialParameters(Trial trial, int loomingStimIndex, int recedingStimIndex, 
@@ -47,14 +45,32 @@ public class ExperimentGenerator : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            testBlock.CreateTrial();
-        }
+            Trial trial = testBlock.CreateTrial();
 
-        SetTrialParameters(testBlock.trials[0], 0, 2, 4, 1, array3Up);
-        SetTrialParameters(testBlock.trials[1], 2, 4, 4, 2, array3Up);
-        SetTrialParameters(testBlock.trials[2], 3, 5, 3, 1, array3Down);
-        SetTrialParameters(testBlock.trials[3], 5, 3, 1, 2, array3Down);
-        SetTrialParameters(testBlock.trials[4], 5, 1, 3, 1, array6);
-        SetTrialParameters(testBlock.trials[5], 0, 2, 4, 2, array6);
+            switch (i)
+            {
+                case 0:
+                    SetTrialParameters(trial, 0, 2, 4, 1, array3Up);
+                    break;
+                case 1:
+                    SetTrialParameters(trial, 2, 4, 4, 2, array3Up);
+                    break;
+                case 2:
+                    SetTrialParameters(trial, 3, 5, 3, 1, array3Down);
+                    break;
+                case 3:
+                    SetTrialParameters(trial, 5, 3, 1, 2, array3Down);
+
+                    break;
+                case 4:
+                    SetTrialParameters(trial, 5, 1, 3, 1, array6);
+                    break;
+                case 5:
+                    SetTrialParameters(trial, 0, 2, 4, 2, array6);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
