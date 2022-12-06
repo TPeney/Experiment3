@@ -133,10 +133,5 @@ public class LocationCalculator : MonoBehaviour
                 Gizmos.DrawCube(point, new Vector3(.05f, .05f, .05f));
             }
         }
-
-        foreach (Vector3 point in midPlanePoints)
-        {
-            Debug.Log(point);
-        }
     }
 }

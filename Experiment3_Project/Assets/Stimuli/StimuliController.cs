@@ -57,7 +57,7 @@ public class StimuliController : MonoBehaviour
         {
             transform.position = Vector3.Lerp(start, end, progress);
             elapsedTime += Time.time - startTime;
-            progress = elapsedTime / startTime;
+            progress = elapsedTime / duration;
             yield return null;
         }
     }
