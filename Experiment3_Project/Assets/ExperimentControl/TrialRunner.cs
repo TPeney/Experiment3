@@ -11,6 +11,7 @@ public class TrialRunner : MonoBehaviour
     [SerializeField] InputActionProperty respondedTarg2Action;
 
     [Header("Duration of receding / looming movements (in seconds)")]
+    [SerializeField] float displayTime = 0f;
     [SerializeField] float stimuliMovementDuration = .15f;
     int response;
     bool trialPassed = true;
@@ -62,7 +63,6 @@ public class TrialRunner : MonoBehaviour
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ProcessStimuliMovement());
         yield return new WaitForSeconds(0.5f);
-        DisplayStimuli(false);
         DisplayTargets(true);
         yield return StartCoroutine(AwaitResponse());
         SaveResults();
@@ -109,8 +109,8 @@ public class TrialRunner : MonoBehaviour
         Vector3 loomStart = planePoints.farPlanePoints[loomingIndex];
         Vector3 loomEnd = planePoints.midPlanePoints[loomingIndex];
 
-        StartCoroutine(recedingStim.MoveTo(recedeStart, recedeEnd, stimuliMovementDuration));
-        StartCoroutine(loomingStim.MoveTo(loomStart, loomEnd, stimuliMovementDuration));
+        StartCoroutine(recedingStim.MoveTo(displayTime, recedeStart, recedeEnd, stimuliMovementDuration));
+        StartCoroutine(loomingStim.MoveTo(displayTime, loomStart, loomEnd, stimuliMovementDuration));
 
         while(recedingStim.IsMoving || loomingStim.IsMoving)
         {

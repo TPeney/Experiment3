@@ -48,13 +48,19 @@ public class StimuliController : MonoBehaviour
         transform.position = position;
     }
 
-    public IEnumerator MoveTo(Vector3 start, Vector3 end, float duration)
+    public IEnumerator MoveTo(float displayTime, Vector3 start, Vector3 end, float duration)
     {
         isMoving = true;
 
-        float startTime = Time.time;
-        float elapsedTime = 0f;
+        float startTime; ;
+        float elapsedTime;
         float progress = 0f;
+
+        transform.position = start;
+
+        yield return new WaitForSecondsRealtime(displayTime);
+
+        startTime = Time.time;
 
         while (progress < 1)
         {
