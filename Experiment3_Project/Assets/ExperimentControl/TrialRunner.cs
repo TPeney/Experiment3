@@ -60,9 +60,10 @@ public class TrialRunner : MonoBehaviour
     {
         LoadTrialData();
         DisplayStimuli(true);
+        TogglePreTargets(true);
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ProcessStimuliMovement());
-        yield return new WaitForSeconds(0.5f);
+        TogglePreTargets(false);
         DisplayTargets(true);
         yield return StartCoroutine(AwaitResponse());
         SaveResults();
@@ -85,6 +86,7 @@ public class TrialRunner : MonoBehaviour
         }
     }
 
+    // Toggle the mesh renderer for the given stimuli
     private void DisplayStimuli(bool toggle, StimuliController[] array)
     {
         foreach (StimuliController stim in array)
@@ -93,11 +95,14 @@ public class TrialRunner : MonoBehaviour
         }
     }
 
+    // Overloaded method as shorthand for just the relevant stim this trial
     private void DisplayStimuli(bool toggle)
     {
         DisplayStimuli(toggle, selectedStimuliArray.ToArray());
     }
 
+    // Assigns the relevant information to call the movement method
+    // on the appropriate StimuliController
     private IEnumerator ProcessStimuliMovement()
     {
         int recedingIndex = Array.IndexOf(stimuliArrayAll, recedingStim);
@@ -125,15 +130,23 @@ public class TrialRunner : MonoBehaviour
         {
             if (stim != targetStim)
             {
-                stim.DisplayTarget(toggle);
+                stim.DisplayTarget(toggle, targetType);
             }
             else
             {
-                stim.DisplayTarget(toggle, targetType);
+                stim.DisplayTarget(toggle, targetType, isTarget: true);
             }
         }
 
         startTime = Time.unscaledTimeAsDouble;
+    }
+
+    private void TogglePreTargets(bool toggle)
+    {
+        foreach (StimuliController stim in selectedStimuliArray)
+        {
+            stim.DisplayTarget(toggle, targetType: 0);
+        }
     }
 
     // Coroutine to loop until response is given
@@ -185,6 +198,7 @@ public class TrialRunner : MonoBehaviour
     // Resets all objects and values for the next trial
     private void CleanUp()
     {
+        DisplayStimuli(false);
         DisplayTargets(false);
         Session.instance.EndCurrentTrial();
     }
