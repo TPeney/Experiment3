@@ -89,6 +89,10 @@ public class LocationCalculator : MonoBehaviour
         {
             adjustedR = reactionRadius * farPlanePercentDistance;
         }
+        if (planeCentre == nearPlaneCentre)
+        {
+            adjustedR = reactionRadius * nearPlanePercentDistance;
+        }
 
         // Find each of the 6 stimuli points - 0 is the top of the circle, 3 is the bottom
         planePoints[0] = FindPointOnCircle(planeCentre, adjustedR, 90f);
@@ -121,8 +125,9 @@ public class LocationCalculator : MonoBehaviour
         UnityEditor.Handles.DrawWireDisc(actionAreaCentre, Vector3.forward,
             reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, actionAreaCentre) / actionToTerminationDistance)));
 
+        // Temp change to near plane to equal mid plane radius
         UnityEditor.Handles.DrawWireDisc(nearPlaneCentre, Vector3.forward,
-            reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, nearPlaneCentre) / actionToTerminationDistance)));
+            reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, farPlaneCentre) / actionToTerminationDistance)));
 
         UnityEditor.Handles.DrawWireDisc(midPlaneCentre, Vector3.forward,
             reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, midPlaneCentre) / actionToTerminationDistance)));
