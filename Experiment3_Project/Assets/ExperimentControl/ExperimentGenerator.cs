@@ -6,57 +6,73 @@ using UXF;
 
 public class ExperimentGenerator : MonoBehaviour
 {
-    readonly List<int> array3Up = new() { 0, 2, 4 };
-    readonly List<int> array3Down = new() { 1, 3, 5 };
-    readonly List<int> array6 = new() { 0, 1, 2, 3, 4, 5 };
+    // Definitions of the Array Size parameter
+    // ints are indices of the stimuli in the 'stimuliArray' GameObject
+    readonly List<int> array3Up = new() { 0, 2, 4 }; // array size 3 (forming a triangle)
+    readonly List<int> array3Down = new() { 1, 3, 5 }; // array size 3 (forming a inverted triangle)
+    readonly List<int> array6 = new() { 0, 1, 2, 3, 4, 5 }; // array size 6 - all stimuli in a hexagon
 
-    bool isDebugging;
-
-    private void Start()
+    /// <summary>
+    /// Called by the ExperimentHandler to begin trial generation
+    /// </summary>
+    public void GenerateExperiment()
     {
-        isDebugging = Session.instance.settings.GetBool("isDebugging");
-    }
-
-    public void GenerateExperiment(Session session)
-    {
-        Block mainBlock = Session.instance.CreateBlock();
-        GenerateTrials(mainBlock);
-
-        if (isDebugging)
+        Block mainBlock = Session.instance.CreateBlock(); // Creating a new Block to store the trials
+        GenerateTrials(mainBlock); // Generate trials and assigns the trial parameters 
+        
+        if (Session.instance.settings.GetBool("isDebugging"))
         {
+            // If in debug mode - create only a subset of trials
             mainBlock.trials = mainBlock.trials.GetRange(0, 10);
         }
+        
+        mainBlock.trials.Shuffle();
     }
-
+     
+    /// <summary>
+    /// Run trial generation for each combination of parameters within this experiment
+    /// </summary>
+    /// <param name="block">The Block to add trials to</param>
     void GenerateTrials(Block block)
     {
         List<int>[] arrayConfigs = { array3Up, array3Down, array6 };
 
-        foreach (List<int> arrayConfig in arrayConfigs)
+        foreach (List<int> arrayConfig in arrayConfigs) // Trial generation process below is repeated for each array size
         {
-            foreach (int stimuliIndex in arrayConfig)
+            foreach (int stimuliIndex in arrayConfig) 
             {
+                // Create a trial for each loom/recede stimulus pairing
+                // When one element is looming, two configurations possible for receding location - clockwise or anticlockwise
                 int loomIndex = stimuliIndex;
-
-                int receedeIndex = CalculateReceedeIndex(stimuliIndex, clockwise: true);
+                
+                // Generate trials for clockwise orientation
+                int recedeIndex = CalculateRecedeIndex(stimuliIndex, clockwise: true);
                 foreach (int targIndex in arrayConfig) // Adds copy of each current trial config for each possible target location
                 {
-                    CreateTrial(block, arrayConfig, loomIndex, receedeIndex, targIndex);
+                    CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
                 }
 
-                receedeIndex = CalculateReceedeIndex(stimuliIndex, clockwise: false);
+                // Generate trials for anti-clockwise orientation
+                recedeIndex = CalculateRecedeIndex(stimuliIndex, clockwise: false);
                 foreach (int targIndex in arrayConfig) // Adds copy of each current trial config for each possible target location
                 {
-                    CreateTrial(block, arrayConfig, loomIndex, receedeIndex, targIndex);
+                    CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
                 }
             }
         }
         
         AssignRandomTargetType(block);
-        block.trials.Shuffle();
+        //block.trials.Shuffle();
     }
 
-
+    /// <summary>
+    /// Helper method to quickly generate a trial with given parameters.
+    /// </summary>
+    /// <param name="block">The Block the trial should be added to.</param>
+    /// <param name="arrayConfig">The list of indices representing the array size and orientation</param>
+    /// <param name="loomIndex">Which array item will perform a looming motion</param>
+    /// <param name="recedeIndex">Which array item will perform a receding motion</param>
+    /// <param name="targIndex">Which array item will display the target</param>
     void CreateTrial(Block block, List<int> arrayConfig, int loomIndex, int recedeIndex, int targIndex)
     {
         Trial trial = block.CreateTrial();
@@ -67,56 +83,42 @@ public class ExperimentGenerator : MonoBehaviour
         trial.settings.SetValue("targetLocationIndex", targIndex);
     }
 
-    private int CalculateReceedeIndex(int stimuliIndex, bool clockwise)
+    /// <summary>
+    /// Calculates the (anti-)/clockwise index of the receding array item in relation to the looming one
+    /// </summary>
+    /// <param name="loomingIndex">The current index of the looming array item</param>
+    /// <param name="clockwise">true: Calculate position clockwise of the looming item</param>
+    /// <returns></returns>
+    private int CalculateRecedeIndex(int loomingIndex, bool clockwise)
     {
-        int receedeIndex = clockwise ? (stimuliIndex + 2) % 6 : (stimuliIndex - 2) % 6;
-        return receedeIndex;
+        int recedeIndex;
+        if (clockwise) { recedeIndex = (loomingIndex + 2) % 6; } // Index + 2 clamped between 0 and 5
+        else
+        {
+            recedeIndex = (loomingIndex - 2) % 6; // Index - 2 clamped between 0 and 5
+            // Above can result in a negative, so conditional to clamp back to desired range
+            if (recedeIndex < 0) { recedeIndex = 6 + recedeIndex;  } 
+        }
+        return recedeIndex;
     }
 
+    /// <summary>
+    /// Randomly, but evenly, assigns either target option to a trial
+    /// </summary>
+    /// <param name="block">The Block to assign target info to</param>
     private static void AssignRandomTargetType(Block block)
     {
+        // Trials shuffled before/after to avoid repeats each run
         block.trials.Shuffle();
 
         for (int i = 0; i < block.trials.Count; i++)
         {
             Trial trial = block.trials[i];
 
-            int targType = i < block.trials.Count / 2 ? 1 : 2;
+            // First half will show target option 1, second half will receive target option 2
+            int targType = i < block.trials.Count / 2 ? 1 : 2; 
             trial.settings.SetValue("targetType", targType);
+            block.trials.Shuffle();
         }
     }
-
-    //void GenerateDebugExperiment(Session session)
-    //{
-    //    if (testBlock == null) {  testBlock = session.CreateBlock(); }
-
-    //    for (int i = 0; i < 6; i++)
-    //    {
-    //        Trial trial = testBlock.CreateTrial();
-
-    //        switch (i)
-    //        {
-    //            case 0:
-    //                CreateTrial(trial, 0, 2, 4, 1, array3Up);
-    //                break;
-    //            case 1:
-    //                CreateTrial(trial, 2, 4, 4, 2, array3Up);
-    //                break;
-    //            case 2:
-    //                CreateTrial(trial, 3, 5, 3, 1, array3Down);
-    //                break;
-    //            case 3:
-    //                CreateTrial(trial, 5, 3, 1, 2, array3Down);
-    //                break;
-    //            case 4:
-    //                CreateTrial(trial, 5, 1, 3, 1, array6);
-    //                break;
-    //            case 5:
-    //                CreateTrial(trial, 0, 2, 4, 2, array6);
-    //                break;
-    //            default:
-    //                break;
-    //        }
-    //    }
-    //}
 }

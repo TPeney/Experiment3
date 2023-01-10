@@ -31,7 +31,7 @@ public class ExperimentHandler : MonoBehaviour
         {
             if (exp.settings.GetBool("isDebugging"))
             {
-                experimentGenerator.GenerateExperiment(exp);
+                experimentGenerator.GenerateExperiment();
             }
         }
     }
