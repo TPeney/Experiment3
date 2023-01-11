@@ -6,33 +6,59 @@ using UXF;
 public class ExperimentHandler : MonoBehaviour
 {
     Session exp;
-    TrialRunner trialRunner;
-
     ExperimentGenerator experimentGenerator;
+    TrialRunner trialRunner;
+    InstructionHandler instrHandler;
 
-    private void Awake()
-    {
-        trialRunner = FindObjectOfType<TrialRunner>();    
-    }
+    bool experimentRunning = false;
 
     void Start()
     {
         exp = Session.instance;
+        trialRunner = FindObjectOfType<TrialRunner>();
+        instrHandler = FindObjectOfType<InstructionHandler>();
         experimentGenerator = GetComponent<ExperimentGenerator>();
     }
 
     void Update()
     {
-        if (!exp.hasInitialised || exp.InTrial) { return; }
-        
-        trialRunner.RunTrial();
+        if (!exp.hasInitialised || experimentRunning) { return; }
 
-        if (exp.CurrentTrial == exp.CurrentBlock.lastTrial)
+        StartCoroutine(RunExperiment());
+    }
+
+    IEnumerator RunExperiment()
+    {
+        experimentRunning = true;
+
+        experimentGenerator.GenerateExperiment();
+
+        yield return StartCoroutine(ShowStartScren());
+        yield return StartCoroutine(RunTrials());
+        yield return StartCoroutine(ShowEndScreen());
+
+        Application.Quit();
+    }
+
+    IEnumerator ShowStartScren()
+    {
+        instrHandler.ShowExpStart();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+
+    IEnumerator ShowEndScreen()
+    {
+        instrHandler.ShowExpEnd();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+
+    IEnumerator RunTrials()
+    {
+        while (!trialRunner.allTrialsComplete)
         {
-            if (exp.settings.GetBool("isDebugging"))
-            {
-                experimentGenerator.GenerateExperiment();
-            }
+            if (!exp.InTrial) { trialRunner.RunTrial(); }
+
+            yield return null;
         }
     }
 }

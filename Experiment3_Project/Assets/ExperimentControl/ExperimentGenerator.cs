@@ -62,7 +62,6 @@ public class ExperimentGenerator : MonoBehaviour
         }
         
         AssignRandomTargetType(block);
-        //block.trials.Shuffle();
     }
 
     /// <summary>
@@ -118,7 +117,8 @@ public class ExperimentGenerator : MonoBehaviour
             // First half will show target option 1, second half will receive target option 2
             int targType = i < block.trials.Count / 2 ? 1 : 2; 
             trial.settings.SetValue("targetType", targType);
-            block.trials.Shuffle();
         }
+        
+        block.trials.Shuffle();
     }
 }

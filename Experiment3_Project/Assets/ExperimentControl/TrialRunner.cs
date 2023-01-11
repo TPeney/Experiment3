@@ -32,6 +32,7 @@ public class TrialRunner : MonoBehaviour
 
     Trial currentTrial;
 
+    public bool allTrialsComplete = false;
     void Start()
     {
         planePoints = FindObjectOfType<LocationCalculator>();
@@ -200,6 +201,7 @@ public class TrialRunner : MonoBehaviour
     {
         DisplayStimuli(false);
         DisplayTargets(false);
+        if (currentTrial == Session.instance.LastTrial) { allTrialsComplete = true; }
         Session.instance.EndCurrentTrial();
     }
 }
