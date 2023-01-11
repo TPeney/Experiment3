@@ -24,7 +24,6 @@ public class InstructionHandler : MonoBehaviour
 
     IEnumerator ShowInstructions(TextMeshPro instrText)
     {
-        Debug.Log("test");
         isShowingInstruction = true;
 
         instrText.gameObject.SetActive(true);

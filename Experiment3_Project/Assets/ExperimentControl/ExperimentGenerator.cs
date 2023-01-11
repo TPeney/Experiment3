@@ -15,18 +15,17 @@ public class ExperimentGenerator : MonoBehaviour
     /// <summary>
     /// Called by the ExperimentHandler to begin trial generation
     /// </summary>
-    public void GenerateExperiment()
+    public void GenerateExperiment(string blockName, int? trialN = null)
     {
-        Block mainBlock = Session.instance.CreateBlock(); // Creating a new Block to store the trials
-        GenerateTrials(mainBlock); // Generate trials and assigns the trial parameters 
+        Block block = Session.instance.CreateBlock(); // Creating a new Block to store the trials
+        block.settings.SetValue("blockName", blockName);
         
-        if (Session.instance.settings.GetBool("isDebugging"))
-        {
-            // If in debug mode - create only a subset of trials
-            mainBlock.trials = mainBlock.trials.GetRange(0, 10);
-        }
+        GenerateTrials(block); // Generate trials and assigns the trial parameters 
+        block.trials.Shuffle();
         
-        mainBlock.trials.Shuffle();
+        // If only a subset of trials is desired, return that range - otherwise set all trials
+        if (trialN == null) { return; }
+        block.trials = block.trials.GetRange(0, (int)trialN);
     }
      
     /// <summary>
