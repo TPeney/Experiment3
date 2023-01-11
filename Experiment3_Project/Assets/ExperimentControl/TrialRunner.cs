@@ -201,7 +201,7 @@ public class TrialRunner : MonoBehaviour
     {
         DisplayStimuli(false);
         DisplayTargets(false);
-        if (currentTrial == Session.instance.LastTrial) { allTrialsComplete = true; }
+        allTrialsComplete = currentTrial == Session.instance.CurrentBlock.lastTrial;
         Session.instance.EndCurrentTrial();
     }
 }

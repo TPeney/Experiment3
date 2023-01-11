@@ -54,6 +54,7 @@ public class ExperimentHandler : MonoBehaviour
 
     IEnumerator RunTrials()
     {
+        trialRunner.allTrialsComplete = false;
         while (!trialRunner.allTrialsComplete)
         {
             if (!exp.InTrial) { trialRunner.RunTrial(); }
