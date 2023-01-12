@@ -58,6 +58,17 @@
                 },
                 {
                     "name": "",
+                    "id": "d946cf34-514a-46b2-afac-6bb98d9ae3c5",
+                    "path": "<OculusTouchController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respond Target 1 Present",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1face998-d3a8-4f01-bc1f-a393da4570d3",
                     "path": "<Keyboard>/p",
                     "interactions": "",
@@ -71,6 +82,17 @@
                     "name": "",
                     "id": "795eec44-a444-448a-95d6-70201c7369bf",
                     "path": "<ValveIndexController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respond Target 2 Present",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40028f15-eeaa-4729-9e40-3537e680350a",
+                    "path": "<OculusTouchController>{RightHand}/primaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
