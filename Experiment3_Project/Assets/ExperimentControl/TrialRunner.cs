@@ -194,6 +194,7 @@ public class TrialRunner : MonoBehaviour
         currentTrial.result["trialType"] = trialType;
         currentTrial.result["response"] = response;
         currentTrial.result["trialPassed"] = trialPassed;
+        currentTrial.result["condition"] = Session.instance.participantDetails["condition"];
     }
 
     // Resets all objects and values for the next trial

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,11 @@ using UXF;
 
 public class ExperimentHandler : MonoBehaviour
 {
+    [Header("Condition Camera's")]
+    [SerializeField] GameObject camera2D;
+    [SerializeField] GameObject VRHcamera;
+    [SerializeField] GameObject VRGcamera;
+
     Session exp;
     ExperimentGenerator experimentGenerator;
     TrialRunner trialRunner;
@@ -20,8 +26,6 @@ public class ExperimentHandler : MonoBehaviour
         trialRunner = FindObjectOfType<TrialRunner>();
         instrHandler = FindObjectOfType<InstructionHandler>();
         experimentGenerator = GetComponent<ExperimentGenerator>();
-
-
     }
 
     void Update()
@@ -35,6 +39,9 @@ public class ExperimentHandler : MonoBehaviour
     IEnumerator RunExperiment()
     {
         experimentRunning = true;
+        RunConditionSettup();
+       
+        yield return StartCoroutine(ShowInstructions());
 
         yield return StartCoroutine(RunPractice());
 
@@ -47,6 +54,26 @@ public class ExperimentHandler : MonoBehaviour
         yield return StartCoroutine(ShowEndScreen());
 
         Application.Quit();
+    }
+
+    private void RunConditionSettup()
+    {
+        string condition = (string)exp.participantDetails["condition"];
+        
+        switch (condition)
+        {
+            case "2D":
+                break;
+            case "VRH":
+                VRHcamera.SetActive(true);
+                break;
+            case "VRG":
+                VRGcamera.SetActive(true);
+                break;
+            default:
+                Debug.Log("Error loading condition");
+                break;
+        }
     }
 
     private bool CheckAccuracy(Block pracBlock)
@@ -62,6 +89,31 @@ public class ExperimentHandler : MonoBehaviour
 
         return passRate >= passTarget;
     }
+    IEnumerator ShowInstructions()
+    {
+        instrHandler.ShowExpInstructions();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+    IEnumerator ShowStartScren()
+    {
+        instrHandler.ShowExpStart();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+    IEnumerator ShowPracFailWarning()
+    {
+        instrHandler.ShowPracFailWarning();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+    IEnumerator ShowBreakScren()
+    {
+        instrHandler.ShowBreak();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+    IEnumerator ShowEndScreen()
+    {
+        instrHandler.ShowExpEnd();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
 
     IEnumerator RunPractice()
     {
@@ -74,31 +126,6 @@ public class ExperimentHandler : MonoBehaviour
             if (!practicePassed) { yield return StartCoroutine(ShowPracFailWarning()); }
         } while (!practicePassed);
     }
-
-    IEnumerator ShowStartScren()
-    {
-        instrHandler.ShowExpStart();
-        while (instrHandler.IsShowingInstruction) { yield return null; }
-    }
-
-    IEnumerator ShowPracFailWarning()
-    {
-        instrHandler.ShowPracFailWarning();
-        while (instrHandler.IsShowingInstruction) { yield return null; }
-    }
-
-    IEnumerator ShowBreakScren()
-    {
-        instrHandler.ShowBreak();
-        while (instrHandler.IsShowingInstruction) { yield return null; }
-    }
-
-    IEnumerator ShowEndScreen()
-    {
-        instrHandler.ShowExpEnd();
-        while (instrHandler.IsShowingInstruction) { yield return null; }
-    }
-
     IEnumerator RunTrials()
     {
         trialRunner.allTrialsComplete = false;

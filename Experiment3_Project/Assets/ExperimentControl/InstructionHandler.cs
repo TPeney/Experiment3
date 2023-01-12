@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class InstructionHandler : MonoBehaviour
 {
     [Header("Text Objects")]
+    [SerializeField] TextMeshPro expInstructions;
     [SerializeField] TextMeshPro expStartText;
     [SerializeField] TextMeshPro pracFailInfo;
     [SerializeField] TextMeshPro breakText;
@@ -49,7 +50,7 @@ public class InstructionHandler : MonoBehaviour
 
         responseReceived = true;
     }
-
+    public void ShowExpInstructions() { StartCoroutine(ShowInstructions(expInstructions)); }
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
     public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }
     public void ShowBreak() { StartCoroutine(ShowInstructions(breakText)); }
