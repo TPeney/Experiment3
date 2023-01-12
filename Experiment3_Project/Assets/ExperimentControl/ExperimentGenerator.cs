@@ -15,17 +15,21 @@ public class ExperimentGenerator : MonoBehaviour
     /// <summary>
     /// Called by the ExperimentHandler to begin trial generation
     /// </summary>
-    public void GenerateExperiment(string blockName, int? trialN = null)
+    /// <returns>A block of trials</returns>
+    public Block GenerateTrialBlock(string blockName, int? trialN = null)
     {
         Block block = Session.instance.CreateBlock(); // Creating a new Block to store the trials
         block.settings.SetValue("blockName", blockName);
         
         GenerateTrials(block); // Generate trials and assigns the trial parameters 
         block.trials.Shuffle();
-        
+
         // If only a subset of trials is desired, return that range - otherwise set all trials
-        if (trialN == null) { return; }
-        block.trials = block.trials.GetRange(0, (int)trialN);
+        if (trialN != null) { block.trials = block.trials.GetRange(0, (int)trialN); }
+        
+        AssignRandomTargetType(block);
+
+        return block;
     }
      
     /// <summary>
@@ -59,8 +63,6 @@ public class ExperimentGenerator : MonoBehaviour
                 }
             }
         }
-        
-        AssignRandomTargetType(block);
     }
 
     /// <summary>

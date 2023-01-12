@@ -8,6 +8,7 @@ public class InstructionHandler : MonoBehaviour
 {
     [Header("Text Objects")]
     [SerializeField] TextMeshPro expStartText;
+    [SerializeField] TextMeshPro pracFailInfo;
     [SerializeField] TextMeshPro breakText;
     [SerializeField] TextMeshPro expEndText;
 
@@ -50,6 +51,7 @@ public class InstructionHandler : MonoBehaviour
     }
 
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
+    public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }
     public void ShowBreak() { StartCoroutine(ShowInstructions(breakText)); }
     public void ShowExpEnd() { StartCoroutine(ShowInstructions(expEndText)); }
 }

@@ -12,6 +12,7 @@ public class ExperimentHandler : MonoBehaviour
 
     bool isDebugging = false;
     bool experimentRunning = false;
+    bool practicePassed = false;
 
     void Start()
     {
@@ -35,8 +36,11 @@ public class ExperimentHandler : MonoBehaviour
     {
         experimentRunning = true;
 
-        if (isDebugging) { experimentGenerator.GenerateExperiment("main", 10); } // Show only subset if in debug mode
-        else { experimentGenerator.GenerateExperiment("main"); }
+        yield return StartCoroutine(RunPractice());
+
+        if (isDebugging) { 
+            Block mainBlock = experimentGenerator.GenerateTrialBlock("main", 10); } // Show only subset if in debug mode
+        else { Block mainBlock = experimentGenerator.GenerateTrialBlock("main"); }
 
         yield return StartCoroutine(ShowStartScren());
         yield return StartCoroutine(RunTrials());
@@ -45,9 +49,41 @@ public class ExperimentHandler : MonoBehaviour
         Application.Quit();
     }
 
+    private bool CheckAccuracy(Block pracBlock)
+    {
+        int nCorrect = 0;
+        foreach (Trial trial in pracBlock.trials)
+        {
+            if ((bool)trial.result["trialPassed"]) { nCorrect++; }
+        }
+
+        int passTarget = exp.settings.GetInt("practicePassPercent");
+        int passRate = Mathf.RoundToInt((nCorrect / pracBlock.trials.Count) * 100);
+
+        return passRate >= passTarget;
+    }
+
+    IEnumerator RunPractice()
+    {
+        do
+        {
+            int pracTrialCount = exp.settings.GetInt("practiceBlockN");
+            Block pracBlock = experimentGenerator.GenerateTrialBlock("practice", pracTrialCount);
+            yield return StartCoroutine(RunTrials());
+            practicePassed = CheckAccuracy(pracBlock);
+            if (!practicePassed) { yield return StartCoroutine(ShowPracFailWarning()); }
+        } while (!practicePassed);
+    }
+
     IEnumerator ShowStartScren()
     {
         instrHandler.ShowExpStart();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+
+    IEnumerator ShowPracFailWarning()
+    {
+        instrHandler.ShowPracFailWarning();
         while (instrHandler.IsShowingInstruction) { yield return null; }
     }
 

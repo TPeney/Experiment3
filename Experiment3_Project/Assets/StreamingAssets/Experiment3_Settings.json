@@ -1,4 +1,6 @@
 {
     "isDebugging": true,
-    "numberOfBreaks": 3
+    "numberOfBreaks": 3,
+    "practiceBlockN": 4,
+    "practicePassPercent": 80
 }
