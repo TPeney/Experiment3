@@ -53,7 +53,7 @@ public class LocationCalculator : MonoBehaviour
             actionAreaCentre.z + actionToTerminationDistance * midPlanePercentDistance);
         
         farPlaneCentre = new Vector3(actionAreaCentre.x, actionAreaCentre.y, 
-            actionAreaCentre.z + actionToTerminationDistance * farPlanePercentDistance);
+            actionAreaCentre.z + actionToTerminationDistance);
         
         terminationPointCentre = new Vector3(actionAreaCentre.x, actionAreaCentre.y, 
             actionAreaCentre.z + actionToTerminationDistance);
@@ -127,7 +127,7 @@ public class LocationCalculator : MonoBehaviour
 
         // Temp change to near plane to equal mid plane radius
         UnityEditor.Handles.DrawWireDisc(nearPlaneCentre, Vector3.forward,
-            reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, farPlaneCentre) / actionToTerminationDistance)));
+            reactionRadius * nearPlanePercentDistance);
 
         UnityEditor.Handles.DrawWireDisc(midPlaneCentre, Vector3.forward,
             reactionRadius * (1 - (Vector3.Distance(actionAreaCentre, midPlaneCentre) / actionToTerminationDistance)));
