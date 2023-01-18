@@ -191,10 +191,12 @@ public class TrialRunner : MonoBehaviour
         else if (targetStim == recedingStim) { trialType = "receding"; }
         else { trialType = "static"; }
 
+        currentTrial.result["arraySize"] = Session.instance.CurrentTrial.settings.GetIntList("arrayConfiguration");
         currentTrial.result["trialType"] = trialType;
         currentTrial.result["response"] = response;
         currentTrial.result["trialPassed"] = trialPassed;
         currentTrial.result["condition"] = Session.instance.participantDetails["condition"];
+        currentTrial.result["blockType"] = Session.instance.CurrentBlock.settings.GetString("blockName");
     }
 
     // Resets all objects and values for the next trial
