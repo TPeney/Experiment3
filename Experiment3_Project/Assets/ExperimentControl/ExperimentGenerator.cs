@@ -52,14 +52,23 @@ public class ExperimentGenerator : MonoBehaviour
                 int recedeIndex = CalculateRecedeIndex(stimuliIndex, clockwise: true);
                 foreach (int targIndex in arrayConfig) // Adds copy of each current trial config for each possible target location
                 {
-                    CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
+                    int reps = arrayConfig == array6 ? 1 : 2; // Add two repeats for the 3-set size arrays
+                    for (int i = 0; i < reps; i++)
+                    {
+                        CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
+                    }
+
                 }
 
                 // Generate trials for anti-clockwise orientation
                 recedeIndex = CalculateRecedeIndex(stimuliIndex, clockwise: false);
                 foreach (int targIndex in arrayConfig) // Adds copy of each current trial config for each possible target location
                 {
-                    CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
+                    int reps = arrayConfig == array6 ? 1 : 2; // Add two repeats for the 3-set size arrays
+                    for (int i = 0; i < reps; i++)
+                    {
+                        CreateTrial(block, arrayConfig, loomIndex, recedeIndex, targIndex);
+                    }
                 }
             }
         }
