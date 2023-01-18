@@ -134,7 +134,7 @@ public class ExperimentHandler : MonoBehaviour
             bool runBreak = BreakCheck();
             if (runBreak && !exp.InTrial) { yield return StartCoroutine(ShowBreakScren()); }
            
-            if (!exp.InTrial) { trialRunner.RunTrial(); }
+            if (!exp.InTrial) { trialRunner.BeginTrial(); }
 
             yield return null;
         }

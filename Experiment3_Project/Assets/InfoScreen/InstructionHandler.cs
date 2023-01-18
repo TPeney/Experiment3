@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles the functionality for displaying instructions to the participant via the information screen.
+/// </summary>
 public class InstructionHandler : MonoBehaviour
 {
     [Header("Text Objects")]
@@ -14,19 +17,22 @@ public class InstructionHandler : MonoBehaviour
     [SerializeField] TextMeshPro expEndText;
 
     Animator screenAnimation;
+    public bool IsShowingInstruction { get; private set; } = false;
+    bool responseReceived = false;
 
     private void Awake()
     {
         screenAnimation = GetComponent<Animator>();
     }
 
-    public bool IsShowingInstruction { get { return isShowingInstruction; } }
-    bool isShowingInstruction = false;
-    bool responseReceived = false;
-
+    /// <summary>
+    /// Show text via in-game screen.
+    /// </summary>
+    /// <param name="instrText">The text to be shown.</param>
+    /// <returns></returns>
     IEnumerator ShowInstructions(TextMeshPro instrText)
     {
-        isShowingInstruction = true;
+        IsShowingInstruction = true;
 
         instrText.gameObject.SetActive(true);
         screenAnimation.SetTrigger("screenDown");
@@ -41,15 +47,17 @@ public class InstructionHandler : MonoBehaviour
         instrText.gameObject.SetActive(false);
 
         responseReceived = false;
-        isShowingInstruction = false;
+        IsShowingInstruction = false;
     }
 
+    // Called from an event via the PlayerInput Component 
     public void ContinuePressed(InputAction.CallbackContext context)
     {
         if (!context.performed) { return; }
-
         responseReceived = true;
     }
+
+    // Helper methods to start the ShowInstructions coroutine with various params
     public void ShowExpInstructions() { StartCoroutine(ShowInstructions(expInstructions)); }
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
     public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }

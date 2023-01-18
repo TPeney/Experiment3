@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8084902380385209425}
   - component: {fileID: 8084902380385209430}
   m_Layer: 0
-  m_Name: TV_Example
+  m_Name: Capture_Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

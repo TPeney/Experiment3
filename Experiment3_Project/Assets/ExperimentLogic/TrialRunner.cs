@@ -5,62 +5,67 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UXF;
 
+/// <summary>
+/// Handles running a single trial and recording data.
+/// </summary>
 public class TrialRunner : MonoBehaviour
 {
+    Trial currentTrial;
+
+    [Header("Input Actions for the target response")]
     [SerializeField] InputActionProperty respondedTarg1Action;
     [SerializeField] InputActionProperty respondedTarg2Action;
 
-    [Header("Duration of receding / looming movements (in seconds)")]
+    [Header("Trial Timings (in seconds)")] // TODO - Change these to settings
     [SerializeField] float displayTime = 0f;
     [SerializeField] float stimuliMovementDuration = .15f;
     float interTrialTime;
-    int distractor;
-    int response;
-    bool trialPassed = true;
 
-    LocationCalculator planePoints;
+    // Stimuli Array Configuration
     StimuliController[] stimuliArrayAll;
+    readonly List<StimuliController> selectedStimuliArray = new();
     List<int> arrayConfiguration = new();
-    List<StimuliController> selectedStimuliArray = new();
+    LocationCalculator planePoints;
 
+    // Motion Stimuli
     StimuliController loomingStim;
     StimuliController recedingStim;
     StimuliController targetStim;
-    int targetType;
 
-    bool waitingForResponse = false;
+    // Trial Paramets
+    int distractor;
+    int targetType;
     double startTime;
     double endTime;
+    int response;
 
-    Trial currentTrial;
+    [HideInInspector] public bool allTrialsComplete = false;
+    bool waitingForResponse = false;
+    bool trialPassed = true;
 
-    public bool allTrialsComplete = false;
     void Start()
     {
         planePoints = FindObjectOfType<LocationCalculator>();
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
 
-
-        for (int i = 0; i < stimuliArrayAll.Length; i++)
-        {
-            stimuliArrayAll[i].MoveTo(planePoints.midPlanePoints[i]);
-        }
-
-        DisplayStimuli(false, stimuliArrayAll);        
+        DisplayStimuli(false, stimuliArrayAll); // Make sure stimuli start hidden        
     }
 
-    public void RunTrial()
+    public void BeginTrial()
     {
         if (Session.instance.InTrial) { return; }
 
         Session.instance.BeginNextTrial();
         currentTrial = Session.instance.CurrentTrial;
-        StartCoroutine(BeginTrialLoop());
+        StartCoroutine(TrialLoop());
     }
 
-    // Main Trial Loop
-    public IEnumerator BeginTrialLoop()
+    /// <summary>
+    /// The main trial loop coroutine.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator TrialLoop()
     {
         LoadTrialData();
         yield return new WaitForSecondsRealtime(interTrialTime);
@@ -78,21 +83,19 @@ public class TrialRunner : MonoBehaviour
     private void LoadTrialData()
     {
         Settings tinfo = currentTrial.settings;
+        interTrialTime = Session.instance.settings.GetFloat("interTrialTimeSec");
+        arrayConfiguration = tinfo.GetIntList("arrayConfiguration");
         loomingStim = stimuliArrayAll[tinfo.GetInt("loomingStimIndex")];
         recedingStim = stimuliArrayAll[tinfo.GetInt("recedingStimIndex")];
         targetStim = stimuliArrayAll[tinfo.GetInt("targetLocationIndex")];
         targetType = tinfo.GetInt("targetID");
-        arrayConfiguration = tinfo.GetIntList("arrayConfiguration");
-        interTrialTime = Session.instance.settings.GetFloat("interTrialTimeSec");
 
         selectedStimuliArray.Clear();
-        foreach (int index in arrayConfiguration)
-        {
-            selectedStimuliArray.Add(stimuliArrayAll[index]);
-        }
+
+        // Set current array size based on the index configuration 
+        foreach (int index in arrayConfiguration) { selectedStimuliArray.Add(stimuliArrayAll[index]); }
     }
 
-    // Toggle the mesh renderer for the given stimuli
     private void DisplayStimuli(bool toggle, StimuliController[] array)
     {
         foreach (StimuliController stim in array)
@@ -101,24 +104,26 @@ public class TrialRunner : MonoBehaviour
         }
     }
 
-    // Overloaded method as shorthand for just the relevant stim this trial
     private void DisplayStimuli(bool toggle)
     {
+        // Overloaded method as shorthand for displaying just the selected stimuli
         DisplayStimuli(toggle, selectedStimuliArray.ToArray());
     }
 
-    // Assigns the relevant information to call the movement method
-    // on the appropriate StimuliController
+    /// <summary>
+    /// Coroutine to display the stimuli looming / receding movement.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ProcessStimuliMovement()
     {
         int recedingIndex = Array.IndexOf(stimuliArrayAll, recedingStim);
         int loomingIndex = Array.IndexOf(stimuliArrayAll, loomingStim);
     
-        Vector3 recedeStart = planePoints.nearPlanePoints[recedingIndex];
-        Vector3 recedeEnd = planePoints.midPlanePoints[recedingIndex];
+        Vector3 recedeStart = planePoints.NearPlanePoints[recedingIndex];
+        Vector3 recedeEnd = planePoints.MidPlanePoints[recedingIndex];
 
-        Vector3 loomStart = planePoints.farPlanePoints[loomingIndex];
-        Vector3 loomEnd = planePoints.midPlanePoints[loomingIndex];
+        Vector3 loomStart = planePoints.FarPlanePoints[loomingIndex];
+        Vector3 loomEnd = planePoints.MidPlanePoints[loomingIndex];
 
         StartCoroutine(recedingStim.MoveTo(displayTime, recedeStart, recedeEnd, stimuliMovementDuration));
         StartCoroutine(loomingStim.MoveTo(displayTime, loomStart, loomEnd, stimuliMovementDuration));
@@ -129,9 +134,9 @@ public class TrialRunner : MonoBehaviour
         }
     }
 
-    // Shows / hides target and all distractors
     private void DisplayTargets(bool toggle)
     {
+        // Select a random distractor from the two options
         if (toggle == true){distractor = Mathf.RoundToInt(UnityEngine.Random.Range(1, 2));}
 
         foreach (StimuliController stim in selectedStimuliArray)
@@ -157,11 +162,9 @@ public class TrialRunner : MonoBehaviour
         }
     }
 
-    // Coroutine to loop until response is given
     private IEnumerator AwaitResponse()
     {
-        waitingForResponse = true;
-
+        waitingForResponse = true; // Set to false in CheckInput()
         while (waitingForResponse)
         {
             yield return null;
@@ -188,7 +191,6 @@ public class TrialRunner : MonoBehaviour
         waitingForResponse = false;
     }
 
-    // Saves results data to trial object
     private void SaveResults()
     {
         currentTrial.result["RT"] = endTime - startTime;
@@ -197,9 +199,9 @@ public class TrialRunner : MonoBehaviour
         if (targetStim == loomingStim) { trialType = "looming"; }
         else if (targetStim == recedingStim) { trialType = "receding"; }
         else { trialType = "static"; }
+        currentTrial.result["trialType"] = trialType;
 
         currentTrial.result["arraySize"] = currentTrial.settings.GetIntList("arrayConfiguration").Count;
-        currentTrial.result["trialType"] = trialType;
         currentTrial.result["targetID"] = targetType == 1 ? "S" : "H";
         currentTrial.result["response"] = response == 1 ? "S" : "H";
         currentTrial.result["trialPassed"] = trialPassed;
