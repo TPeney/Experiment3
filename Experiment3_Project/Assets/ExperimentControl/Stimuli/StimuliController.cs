@@ -47,8 +47,8 @@ public class StimuliController : MonoBehaviour
     // Displays the specified target on the stimulus
     public void DisplayTarget(bool toggle, int targetType, bool isTarget = false)
     {
-        if (targetType == 0) { preTarget.SetActive(toggle); }
 
+        if (targetType == 0) { preTarget.SetActive(toggle); }
         else if (targetType == 1)
         {
             if (isTarget) target1.SetActive(toggle);

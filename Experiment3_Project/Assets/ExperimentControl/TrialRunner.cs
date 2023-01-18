@@ -13,6 +13,8 @@ public class TrialRunner : MonoBehaviour
     [Header("Duration of receding / looming movements (in seconds)")]
     [SerializeField] float displayTime = 0f;
     [SerializeField] float stimuliMovementDuration = .15f;
+    float interTrialTime;
+    int distractor;
     int response;
     bool trialPassed = true;
 
@@ -39,6 +41,7 @@ public class TrialRunner : MonoBehaviour
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
 
+
         for (int i = 0; i < stimuliArrayAll.Length; i++)
         {
             stimuliArrayAll[i].MoveTo(planePoints.midPlanePoints[i]);
@@ -60,6 +63,7 @@ public class TrialRunner : MonoBehaviour
     public IEnumerator BeginTrialLoop()
     {
         LoadTrialData();
+        yield return new WaitForSecondsRealtime(interTrialTime);
         DisplayStimuli(true);
         TogglePreTargets(true);
         yield return new WaitForEndOfFrame();
@@ -77,8 +81,9 @@ public class TrialRunner : MonoBehaviour
         loomingStim = stimuliArrayAll[tinfo.GetInt("loomingStimIndex")];
         recedingStim = stimuliArrayAll[tinfo.GetInt("recedingStimIndex")];
         targetStim = stimuliArrayAll[tinfo.GetInt("targetLocationIndex")];
-        targetType = tinfo.GetInt("targetType");
+        targetType = tinfo.GetInt("targetID");
         arrayConfiguration = tinfo.GetIntList("arrayConfiguration");
+        interTrialTime = Session.instance.settings.GetFloat("interTrialTimeSec");
 
         selectedStimuliArray.Clear();
         foreach (int index in arrayConfiguration)
@@ -127,11 +132,13 @@ public class TrialRunner : MonoBehaviour
     // Shows / hides target and all distractors
     private void DisplayTargets(bool toggle)
     {
+        if (toggle == true){distractor = Mathf.RoundToInt(UnityEngine.Random.Range(1, 2));}
+
         foreach (StimuliController stim in selectedStimuliArray)
         {
             if (stim != targetStim)
             {
-                stim.DisplayTarget(toggle, targetType);
+                stim.DisplayTarget(toggle, distractor);
             }
             else
             {
@@ -191,9 +198,10 @@ public class TrialRunner : MonoBehaviour
         else if (targetStim == recedingStim) { trialType = "receding"; }
         else { trialType = "static"; }
 
-        currentTrial.result["arraySize"] = Session.instance.CurrentTrial.settings.GetIntList("arrayConfiguration");
+        currentTrial.result["arraySize"] = currentTrial.settings.GetIntList("arrayConfiguration").Count;
         currentTrial.result["trialType"] = trialType;
-        currentTrial.result["response"] = response;
+        currentTrial.result["targetID"] = targetType == 1 ? "S" : "H";
+        currentTrial.result["response"] = response == 1 ? "S" : "H";
         currentTrial.result["trialPassed"] = trialPassed;
         currentTrial.result["condition"] = Session.instance.participantDetails["condition"];
         currentTrial.result["blockType"] = Session.instance.CurrentBlock.settings.GetString("blockName");

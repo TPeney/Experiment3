@@ -1,5 +1,6 @@
 {
-    "isDebugging": true,
+    "isDebugging": false,
+    "interTrialTimeSec": 0.5,  
     "numberOfBreaks": 3,
     "practiceBlockN": 4,
     "practicePassPercent": 80
