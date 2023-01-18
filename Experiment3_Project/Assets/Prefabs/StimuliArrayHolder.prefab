@@ -42,7 +42,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3927391764465157179}
   - component: {fileID: 3927391764465157178}
-  - component: {fileID: 3927391764465157173}
   m_Layer: 0
   m_Name: StimuliArray
   m_TagString: Array
@@ -109,12 +108,12 @@ MonoBehaviour:
   - {x: -0.307182, y: 0.78490883, z: 2}
   - {x: -0.307182, y: 1.2150912, z: 2}
   farPlanePoints:
-  - {x: -0.000000024587656, y: 1.5625, z: 3}
-  - {x: 0.46077302, y: 1.3226367, z: 3}
-  - {x: 0.46077296, y: 0.67736316, z: 3}
-  - {x: 0.0000000067077455, y: 0.4375, z: 3}
-  - {x: -0.46077302, y: 0.6773633, z: 3}
-  - {x: -0.46077302, y: 1.3226367, z: 3}
+  - {x: -0.000000024587656, y: 1.5625, z: 4}
+  - {x: 0.46077302, y: 1.3226367, z: 4}
+  - {x: 0.46077296, y: 0.67736316, z: 4}
+  - {x: 0.0000000067077455, y: 0.4375, z: 4}
+  - {x: -0.46077302, y: 0.6773633, z: 4}
+  - {x: -0.46077302, y: 1.3226367, z: 4}
   terminationPointPoints:
   - {x: 0, y: 1, z: 4}
   - {x: 0, y: 1, z: 4}
@@ -122,18 +121,6 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 4}
   - {x: 0, y: 1, z: 4}
   - {x: 0, y: 1, z: 4}
---- !u!114 &3927391764465157173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3927391764465157176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541973abe4ce1b641b84c7c8e23c053c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1651986598408617625
 PrefabInstance:
   m_ObjectHideFlags: 0

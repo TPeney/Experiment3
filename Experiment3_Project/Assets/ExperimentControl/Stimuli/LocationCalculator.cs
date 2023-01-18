@@ -27,19 +27,21 @@ public class LocationCalculator : MonoBehaviour
     readonly float midPlanePercentDistance = 0.5f;
     readonly float farPlanePercentDistance = 0.75f;
 
+    StimuliController[] stimuliArray;
+
     void Start()
     {
-        CalculatedPlaneCentrePoints();
-        CalculatePlanePoints();
+        GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
+        stimuliArray = arrayHolder.GetComponentsInChildren<StimuliController>();
     }
 
     private void Update()
     {
-        if (!Application.isPlaying)
-        {
-            CalculatedPlaneCentrePoints();
-            CalculatePlanePoints();
-        }
+        CalculatedPlaneCentrePoints();
+        CalculatePlanePoints();
+        if (Application.isPlaying) return;
+
+        UpdateStimuliPositions();
     }
 
     // Find the centre point of each planes circle based on the starting plane (actionArea) and 
@@ -112,6 +114,15 @@ public class LocationCalculator : MonoBehaviour
         float y = centrePoint.y + adjustedR * Mathf.Sin(angle * (Mathf.PI / 180));
 
         return new Vector3(x, y, centrePoint.z);
+    }
+
+    private void UpdateStimuliPositions()
+    {
+        Debug.Log("Working");
+        for (int i = 0; i < stimuliArray.Length; i++)
+        {
+            stimuliArray[i].transform.position = midPlanePoints[i];
+        }
     }
 
     // Show Debugging Gizmos

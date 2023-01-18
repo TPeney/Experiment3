@@ -3,32 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// Collection of public functions to manipulate a stimuli object.
+/// </summary>
 public class StimuliController : MonoBehaviour
 {
-    MeshRenderer mesh;
-
+    [Header("Target Text Values - Assign in Prefab")]
     [SerializeField] string target1Text;
     [SerializeField] string target1NullText;
     [SerializeField] string target2Text;
     [SerializeField] string target2NullText;
 
+    // Target GameObjects
     GameObject preTarget;
-
     GameObject target1;
     GameObject target1Null;
-
     GameObject target2;
     GameObject target2Null;
 
-    bool isMoving = false;
-    public bool IsMoving { get { return isMoving; } }
+    MeshRenderer mesh;
+
+    public bool IsMoving { get; private set; } = false;
 
     void Start()
     {
         preTarget = transform.Find("PreTarget").gameObject;
         target1 = transform.Find("Target1").gameObject;
-        target2 = transform.Find("Target2").gameObject;
         target1Null = transform.Find("Target1Null").gameObject;
+        target2 = transform.Find("Target2").gameObject;
         target2Null = transform.Find("Target2Null").gameObject;
 
         mesh = GetComponent<MeshRenderer>();
@@ -44,20 +46,24 @@ public class StimuliController : MonoBehaviour
         target2Null.GetComponent<TextMeshPro>().text = target2NullText;
     }
 
-    // Displays the specified target on the stimulus
+    /// <summary>
+    /// Toggles the visiblity of the specified target on the stimulus.
+    /// </summary>
+    /// <param name="toggle">true = show, false = hide.</param>
+    /// <param name="targetType">Target Type by int: 0 is PreTarget.</param>
+    /// <param name="isTarget">Whether the target to be shown is the actual target for the trial.</param>
     public void DisplayTarget(bool toggle, int targetType, bool isTarget = false)
     {
-
         if (targetType == 0) { preTarget.SetActive(toggle); }
         else if (targetType == 1)
         {
             if (isTarget) target1.SetActive(toggle);
-            else target1Null.SetActive(toggle);
+            else target1Null.SetActive(toggle); // Null targets are distractors
         }
         else if (targetType == 2)
         {
             if (isTarget) target2.SetActive(toggle);
-            else target2Null.SetActive(toggle);
+            else target2Null.SetActive(toggle); // Null targets are distractors
         }
         else
         {
@@ -70,16 +76,19 @@ public class StimuliController : MonoBehaviour
         mesh.enabled = toggle;
     }
 
-    public void MoveTo(Vector3 position)
-    {
-        transform.position = position;
-    }
-
+    /// <summary>
+    /// Coroutine to move the stimuli between two points through Lerp.
+    /// </summary>
+    /// <param name="displayTime">Duration to be shown in starting position before movement occurs.</param>
+    /// <param name="start">Starting postion.</param>
+    /// <param name="end">Ending position.</param>
+    /// <param name="duration">How long the movement should take.</param>
+    /// <returns></returns>
     public IEnumerator MoveTo(float displayTime, Vector3 start, Vector3 end, float duration)
     {
-        isMoving = true;
+        IsMoving = true;
 
-        float startTime; ;
+        float startTime;
         float elapsedTime;
         float progress = 0f;
 
@@ -98,7 +107,11 @@ public class StimuliController : MonoBehaviour
         }
 
         transform.position = end;
+        IsMoving = false;
+    }
 
-        isMoving = false;
+    public void MoveTo(Vector3 position)
+    {
+        transform.position = position;
     }
 }
