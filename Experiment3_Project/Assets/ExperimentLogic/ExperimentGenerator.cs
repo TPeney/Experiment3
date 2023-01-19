@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UXF;
 
+/// <summary>
+/// Create's a block of trials based on the current experiments parameters.
+/// </summary>
 public class ExperimentGenerator : MonoBehaviour
 {
     // Definitions of the Array Size parameter
@@ -15,6 +18,8 @@ public class ExperimentGenerator : MonoBehaviour
     /// <summary>
     /// Called by the ExperimentHandler to begin trial generation
     /// </summary>
+    /// <param name="blockName">The name to assign to the created block.</param>
+    /// <param name="trialN">How many trials to include. Default is all trials.</param>
     /// <returns>A block of trials</returns>
     public Block GenerateTrialBlock(string blockName, int? trialN = null)
     {

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UXF;
 
+/// <summary>
+/// Controls the flow and execution of each element of the experiment.
+/// </summary>
 public class ExperimentHandler : MonoBehaviour
 {
     [Header("Condition Camera's")]
@@ -45,8 +48,8 @@ public class ExperimentHandler : MonoBehaviour
 
         yield return StartCoroutine(RunPractice());
 
-        if (isDebugging) { 
-            Block mainBlock = experimentGenerator.GenerateTrialBlock("main", 10); } // Show only subset if in debug mode
+        if (isDebugging) {
+            Block mainBlock = experimentGenerator.GenerateTrialBlock(blockName: "main", trialN: 10); ; } // Show only subset if in debug mode
         else { Block mainBlock = experimentGenerator.GenerateTrialBlock("main"); }
 
         yield return StartCoroutine(ShowStartScren());
@@ -56,6 +59,7 @@ public class ExperimentHandler : MonoBehaviour
         Application.Quit();
     }
 
+    // Activates the camera associated with the given condition. 
     private void RunConditionSettup()
     {
         string condition = (string)exp.participantDetails["condition"];
@@ -76,6 +80,7 @@ public class ExperimentHandler : MonoBehaviour
         }
     }
 
+    // Helper method to check a Practice block was completed with minimal errors
     private bool CheckAccuracy(Block pracBlock)
     {
         int nCorrect = 0;
@@ -89,6 +94,8 @@ public class ExperimentHandler : MonoBehaviour
 
         return passRate >= passTarget;
     }
+
+    // Info screen methods
     IEnumerator ShowInstructions()
     {
         instrHandler.ShowExpInstructions();
@@ -120,12 +127,17 @@ public class ExperimentHandler : MonoBehaviour
         do
         {
             int pracTrialCount = exp.settings.GetInt("practiceBlockN");
-            Block pracBlock = experimentGenerator.GenerateTrialBlock("practice", pracTrialCount);
+            Block pracBlock = experimentGenerator.GenerateTrialBlock(blockName: "practice", trialN: pracTrialCount);
             yield return StartCoroutine(RunTrials());
             practicePassed = CheckAccuracy(pracBlock);
             if (!practicePassed) { yield return StartCoroutine(ShowPracFailWarning()); }
-        } while (!practicePassed);
+        } while (!practicePassed); // Keep running practice trials until passed with sufficent accuracy 
     }
+
+    /// <summary>
+    /// Coroutine to initalize trials and breaks.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator RunTrials()
     {
         trialRunner.allTrialsComplete = false;
@@ -140,6 +152,7 @@ public class ExperimentHandler : MonoBehaviour
         }
     }
 
+    // Helper method for RunTrials() to check if a break is needed 
     bool BreakCheck()
     {
         // # of breaks are evenly spaced between first and last trial
