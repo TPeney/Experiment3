@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UXF;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controls the flow and execution of each element of the experiment.
@@ -20,6 +21,7 @@ public class ExperimentHandler : MonoBehaviour
     InstructionHandler instrHandler;
 
     bool isDebugging = false;
+    bool pauseRequested = false;
     bool experimentRunning = false;
     bool practicePassed = false;
 
@@ -116,6 +118,13 @@ public class ExperimentHandler : MonoBehaviour
         instrHandler.ShowBreak();
         while (instrHandler.IsShowingInstruction) { yield return null; }
     }
+    IEnumerator ShowPauseScren()
+    {
+        instrHandler.ShowPause();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+        pauseRequested = false;
+    }
+
     IEnumerator ShowEndScreen()
     {
         instrHandler.ShowExpEnd();
@@ -144,6 +153,9 @@ public class ExperimentHandler : MonoBehaviour
         while (!trialRunner.allTrialsComplete)
         {
             bool runBreak = BreakCheck();
+
+            if (pauseRequested && !exp.InTrial) { yield return StartCoroutine(ShowPauseScren()); }
+
             if (runBreak && !exp.InTrial) { yield return StartCoroutine(ShowBreakScren()); }
            
             if (!exp.InTrial) { trialRunner.BeginTrial(); }
@@ -167,5 +179,11 @@ public class ExperimentHandler : MonoBehaviour
 
         // Returns true if the current trial index falls on a break index
         return (thisTrialIndex % breakIndex == 0);
+    }
+
+    public void PausePressed(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        pauseRequested = true;
     }
 }

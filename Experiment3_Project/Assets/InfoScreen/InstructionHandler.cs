@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UXF;
 
 /// <summary>
 /// Handles the functionality for displaying instructions to the participant via the information screen.
@@ -14,6 +15,7 @@ public class InstructionHandler : MonoBehaviour
     [SerializeField] TextMeshPro expStartText;
     [SerializeField] TextMeshPro pracFailInfo;
     [SerializeField] TextMeshPro breakText;
+    [SerializeField] TextMeshPro pauseText;
     [SerializeField] TextMeshPro expEndText;
 
     Animator screenAnimation;
@@ -63,4 +65,9 @@ public class InstructionHandler : MonoBehaviour
     public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }
     public void ShowBreak() { StartCoroutine(ShowInstructions(breakText)); }
     public void ShowExpEnd() { StartCoroutine(ShowInstructions(expEndText)); }
+    public void ShowPause() {
+        int trialsRemaining = Session.instance.CurrentBlock.trials.Count - Session.instance.CurrentTrial.number;
+        pauseText.text = $"Experiment has been paused.\nThere are {trialsRemaining} trials remaining.\nPress trigger to resume.";
+        StartCoroutine(ShowInstructions(pauseText)); 
+    }
 }
