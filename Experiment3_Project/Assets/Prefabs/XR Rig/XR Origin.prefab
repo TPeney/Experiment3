@@ -1026,8 +1026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a42e1c42af6974680eb33a81279c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingTransform: {x: 0, y: 0, z: 0}
-  startingAngles: {x: 0, y: 0, z: 0}
 --- !u!1 &5372052628333711155
 GameObject:
   m_ObjectHideFlags: 0
