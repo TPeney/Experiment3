@@ -130,6 +130,7 @@ public class LocationCalculator : MonoBehaviour
     }
 
     // Visual debugging - shows the depth planes as gizmos
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (!showDebug) { return; }
@@ -170,4 +171,5 @@ public class LocationCalculator : MonoBehaviour
         Gizmos.DrawSphere(terminationPoint, 0.03f);
 
     }
+#endif
 }
