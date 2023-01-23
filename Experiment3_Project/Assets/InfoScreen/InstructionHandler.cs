@@ -60,7 +60,20 @@ public class InstructionHandler : MonoBehaviour
     }
 
     // Helper methods to start the ShowInstructions coroutine with various params
-    public void ShowExpInstructions() { StartCoroutine(ShowInstructions(expInstructions)); }
+    public void ShowExpInstructions() {
+        int controlScheme = Session.instance.settings.GetInt("controlScheme");
+
+        if (controlScheme == 2) // Correct text for control scheme 1 set by default in inspector
+        {
+            expInstructions.text = 
+            "Your task is simple. You must determine which target letter is present:\n\n" +
+            "S or H\n\n" +
+            "If there is a 'S' - press right button.\n" +
+            "If there is a 'H' - press left button.\n\n" +
+            "Ignore all other letters.\n\n" +
+            "Press trigger to begin a practice block.\n";
+        }
+        StartCoroutine(ShowInstructions(expInstructions)); }
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
     public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }
     public void ShowBreak() { StartCoroutine(ShowInstructions(breakText)); }

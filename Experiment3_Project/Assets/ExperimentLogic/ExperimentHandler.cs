@@ -15,6 +15,10 @@ public class ExperimentHandler : MonoBehaviour
     [SerializeField] GameObject VRHcamera;
     [SerializeField] GameObject VRGcamera;
 
+    [Header("References to the input actions to respond to each target")]
+    [SerializeField] InputActionReference target1Response;
+    [SerializeField] InputActionReference target2Response;
+
     Session exp;
     ExperimentGenerator experimentGenerator;
     TrialRunner trialRunner;
@@ -65,7 +69,7 @@ public class ExperimentHandler : MonoBehaviour
     private void RunConditionSettup()
     {
         string condition = (string)exp.participantDetails["condition"];
-        
+
         switch (condition)
         {
             case "2D":
@@ -79,6 +83,34 @@ public class ExperimentHandler : MonoBehaviour
             default:
                 Debug.Log("Error loading condition");
                 break;
+        }
+
+        SetInputBindings();
+    }
+    
+    // Swaps which 'hand' is used to respond to each target     
+    private void SetInputBindings()
+    {
+        int controlScheme = Session.instance.settings.GetInt("controlScheme");
+
+        if (controlScheme == 1) { return; } // Target 1 as left hand response is set by default 
+        if (controlScheme == 2)
+        {
+            //target1Response.action.ApplyBindingOverride("<Keyboard>/p",
+            //                                            "<ValveIndexController>{RightHand}/primaryButton",
+            //                                            "<OculusTouchController>{RightHand}/primaryButton");
+
+            //target2Response.action.ApplyBindingOverride("<Keyboard>/q",
+            //                                            "<ValveIndexController>{LeftHand}/primaryButton",
+            //                                            "<OculusTouchController>{LeftHand}/primaryButton");
+            
+            target1Response.action.ApplyBindingOverride("<ValveIndexController>{RightHand}/primaryButton"); 
+            target1Response.action.AddBinding("<Keyboard>/p");
+            target1Response.action.AddBinding("<OculusTouchController>{RightHand}/primaryButton");
+
+            target2Response.action.ApplyBindingOverride("<ValveIndexController>{LeftHand}/primaryButton");
+            target2Response.action.AddBinding("<Keyboard>/q");
+            target2Response.action.AddBinding("<OculusTouchController>{LeftHand}/primaryButton");
         }
     }
 
