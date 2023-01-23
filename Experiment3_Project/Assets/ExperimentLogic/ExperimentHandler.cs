@@ -75,9 +75,11 @@ public class ExperimentHandler : MonoBehaviour
             case "2D":
                 break;
             case "VRH":
+                camera2D.SetActive(false);
                 VRHcamera.SetActive(true);
                 break;
             case "VRG":
+                camera2D.SetActive(false);
                 VRGcamera.SetActive(true);
                 break;
             default:
@@ -96,14 +98,6 @@ public class ExperimentHandler : MonoBehaviour
         if (controlScheme == 1) { return; } // Target 1 as left hand response is set by default 
         if (controlScheme == 2)
         {
-            //target1Response.action.ApplyBindingOverride("<Keyboard>/p",
-            //                                            "<ValveIndexController>{RightHand}/primaryButton",
-            //                                            "<OculusTouchController>{RightHand}/primaryButton");
-
-            //target2Response.action.ApplyBindingOverride("<Keyboard>/q",
-            //                                            "<ValveIndexController>{LeftHand}/primaryButton",
-            //                                            "<OculusTouchController>{LeftHand}/primaryButton");
-            
             target1Response.action.ApplyBindingOverride("<ValveIndexController>{RightHand}/primaryButton"); 
             target1Response.action.AddBinding("<Keyboard>/p");
             target1Response.action.AddBinding("<OculusTouchController>{RightHand}/primaryButton");
