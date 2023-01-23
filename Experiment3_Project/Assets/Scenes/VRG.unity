@@ -1218,6 +1218,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin (VRH)
       objectReference: {fileID: 0}
+    - target: {fileID: 5372052628330368349, guid: 627d4a75065edf744b429da9fd596821,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 627d4a75065edf744b429da9fd596821, type: 3}
 --- !u!1 &470592970
@@ -4214,7 +4219,8 @@ PrefabInstance:
       propertyPath: m_RequestedTrackingOriginMode
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5372052628928285883, guid: 627d4a75065edf744b429da9fd596821, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 627d4a75065edf744b429da9fd596821, type: 3}
 --- !u!4 &1208038698 stripped
 Transform:
