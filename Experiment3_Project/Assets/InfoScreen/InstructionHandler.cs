@@ -18,6 +18,12 @@ public class InstructionHandler : MonoBehaviour
     [SerializeField] TextMeshPro pauseText;
     [SerializeField] TextMeshPro expEndText;
 
+    [Header("Controller Hint Text")]
+    [SerializeField] TextMeshPro VRHleftControllerText;
+    [SerializeField] TextMeshPro VRHrightControllerText;
+    [SerializeField] TextMeshPro VRGleftControllerText;
+    [SerializeField] TextMeshPro VRGrightControllerText;
+
     Animator screenAnimation;
     public bool IsShowingInstruction { get; private set; } = false;
     bool responseReceived = false;
@@ -65,6 +71,7 @@ public class InstructionHandler : MonoBehaviour
 
         if (controlScheme == 2) // Correct text for control scheme 1 set by default in inspector
         {
+            // TODO - If time, find a nicer way of doing this
             expInstructions.text = 
             "Your task is simple. You must determine which target letter is present:\n\n" +
             "S or H\n\n" +
@@ -72,6 +79,12 @@ public class InstructionHandler : MonoBehaviour
             "If there is a 'H' - press left button.\n\n" +
             "Ignore all other letters.\n\n" +
             "Press trigger to begin a practice block.\n";
+
+            VRHleftControllerText.text = "<- H";
+            VRGleftControllerText.text = "<- H";
+
+            VRHrightControllerText.text = "S ->";
+            VRGrightControllerText.text = "S ->";
         }
         StartCoroutine(ShowInstructions(expInstructions)); }
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
