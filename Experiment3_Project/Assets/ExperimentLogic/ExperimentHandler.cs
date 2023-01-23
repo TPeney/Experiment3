@@ -167,8 +167,19 @@ public class ExperimentHandler : MonoBehaviour
     {
         do
         {
-            int pracTrialCount = exp.settings.GetInt("practiceBlockN");
-            Block pracBlock = experimentGenerator.GenerateTrialBlock(blockName: "practice", trialN: pracTrialCount);
+            Block pracBlock;
+            int session = Session.instance.number;
+            if (session == 1)
+            {
+                int pracTrialCount = exp.settings.GetInt("practiceBlockN");
+                pracBlock = experimentGenerator.GenerateTrialBlock(blockName: "practice", trialN: pracTrialCount);
+            }
+            else
+            {
+                int pracTrialCount = exp.settings.GetInt("warmUpBlockN");
+                pracBlock = experimentGenerator.GenerateTrialBlock(blockName: "practice", trialN: pracTrialCount);
+            }
+
             yield return StartCoroutine(RunTrials());
             practicePassed = CheckAccuracy(pracBlock);
             if (!practicePassed) { yield return StartCoroutine(ShowPracFailWarning()); }
