@@ -11,6 +11,7 @@ using UXF;
 public class InstructionHandler : MonoBehaviour
 {
     [Header("Text Objects")]
+    [SerializeField] TextMeshPro vrTeleport;
     [SerializeField] TextMeshPro expInstructions;
     [SerializeField] TextMeshPro expStartText;
     [SerializeField] TextMeshPro pracFailInfo;
@@ -25,12 +26,15 @@ public class InstructionHandler : MonoBehaviour
     [SerializeField] TextMeshPro VRGrightControllerText;
 
     Animator screenAnimation;
+    ExperimentHandler expHandler;
+
     public bool IsShowingInstruction { get; private set; } = false;
     bool responseReceived = false;
 
     private void Awake()
     {
         screenAnimation = GetComponent<Animator>();
+        expHandler = FindObjectOfType<ExperimentHandler>();
     }
 
     /// <summary>
@@ -38,7 +42,7 @@ public class InstructionHandler : MonoBehaviour
     /// </summary>
     /// <param name="instrText">The text to be shown.</param>
     /// <returns></returns>
-    IEnumerator ShowInstructions(TextMeshPro instrText)
+    IEnumerator ShowInstructions(TextMeshPro instrText, bool resetCamera = false)
     {
         IsShowingInstruction = true;
 
@@ -47,7 +51,9 @@ public class InstructionHandler : MonoBehaviour
         float animationLength = screenAnimation.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSecondsRealtime(animationLength);
 
-        while (!responseReceived) { yield return null; }
+        while (!responseReceived) { yield return null; } // Set to true in ContinuePressed()
+
+        if (resetCamera) { expHandler.ActiveCamera.GetComponent<PositionReset>().ResetView(); }
 
         screenAnimation.SetTrigger("screenUp");
         animationLength = screenAnimation.GetCurrentAnimatorStateInfo(0).length;
@@ -66,6 +72,7 @@ public class InstructionHandler : MonoBehaviour
     }
 
     // Helper methods to start the ShowInstructions coroutine with various params
+    public void ShowCameraResetInstructions() { StartCoroutine(ShowInstructions(vrTeleport, resetCamera: true)); }
     public void ShowExpInstructions() {
         int controlScheme = Session.instance.settings.GetInt("controlScheme");
 

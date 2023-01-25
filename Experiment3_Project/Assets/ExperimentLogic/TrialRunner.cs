@@ -137,7 +137,7 @@ public class TrialRunner : MonoBehaviour
     private void DisplayTargets(bool toggle)
     {
         // Select a random distractor from the two options
-        if (toggle == true){distractor = Mathf.RoundToInt(UnityEngine.Random.Range(1, 2));}
+            if (toggle == true){ distractor = Mathf.RoundToInt(UnityEngine.Random.Range(1, 3)); }
 
         foreach (StimuliController stim in selectedStimuliArray)
         {

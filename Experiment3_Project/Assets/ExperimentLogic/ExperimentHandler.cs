@@ -14,6 +14,7 @@ public class ExperimentHandler : MonoBehaviour
     [SerializeField] GameObject camera2D;
     [SerializeField] GameObject VRHcamera;
     [SerializeField] GameObject VRGcamera;
+    public GameObject ActiveCamera { private set; get; }
 
     [Header("References to the input actions to respond to each target")]
     [SerializeField] InputActionReference target1Response;
@@ -49,13 +50,17 @@ public class ExperimentHandler : MonoBehaviour
     {
         experimentRunning = true;
         RunConditionSettup();
-       
+
+        if (ActiveCamera != camera2D) { yield return StartCoroutine(ShowCameraResetInstructions()); }
+
         yield return StartCoroutine(ShowInstructions());
 
         yield return StartCoroutine(RunPractice());
 
-        if (isDebugging) {
-            Block mainBlock = experimentGenerator.GenerateTrialBlock(blockName: "main", trialN: 10); ; } // Show only subset if in debug mode
+        if (isDebugging)
+        {
+            Block mainBlock = experimentGenerator.GenerateTrialBlock(blockName: "main", trialN: 10); ;
+        } // Show only subset if in debug mode
         else { Block mainBlock = experimentGenerator.GenerateTrialBlock("main"); }
 
         yield return StartCoroutine(ShowStartScren());
@@ -73,14 +78,18 @@ public class ExperimentHandler : MonoBehaviour
         switch (condition)
         {
             case "2D":
+                ActiveCamera = camera2D;
+                Cursor.visible = false;
                 break;
             case "VRH":
                 camera2D.SetActive(false);
                 VRHcamera.SetActive(true);
+                ActiveCamera = VRHcamera;
                 break;
             case "VRG":
                 camera2D.SetActive(false);
                 VRGcamera.SetActive(true);
+                ActiveCamera = VRGcamera;
                 break;
             default:
                 Debug.Log("Error loading condition");
@@ -124,6 +133,12 @@ public class ExperimentHandler : MonoBehaviour
     }
 
     // Info screen methods
+    IEnumerator ShowCameraResetInstructions()
+    {
+        instrHandler.ShowCameraResetInstructions();
+        while (instrHandler.IsShowingInstruction) { yield return null; }
+    }
+
     IEnumerator ShowInstructions()
     {
         instrHandler.ShowExpInstructions();
