@@ -5213,7 +5213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1495671812}
   m_Layer: 0
-  m_Name: Camera's
+  m_Name: Cameras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10163,16 +10163,6 @@ PrefabInstance:
       propertyPath: terminationPointPoints.Array.data[5].z
       value: 1.99
       objectReference: {fileID: 0}
-    - target: {fileID: 4289230446512866475, guid: b23d779a6a631a5469901949caa93446,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5200862861237321038, guid: b23d779a6a631a5469901949caa93446,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5481255763164960339, guid: b23d779a6a631a5469901949caa93446,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10187,11 +10177,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6933134451077973667, guid: b23d779a6a631a5469901949caa93446,
-        type: 3}
-      propertyPath: m_CastShadows
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7817327683171451004, guid: b23d779a6a631a5469901949caa93446,
         type: 3}

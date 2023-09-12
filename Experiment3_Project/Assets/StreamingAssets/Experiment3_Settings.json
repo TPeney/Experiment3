@@ -1,7 +1,8 @@
 {
     "isDebugging": false,
     "controlScheme": 1, 
-    "interTrialTimeSec": 0.5,  
+    "interTrialTimeSec": 0.5,
+    "stimuliDisplayDuration": 0.2,
     "numberOfBreaks": 3,
     "practiceBlockN": 16,
     "warmUpBlockN": 4,

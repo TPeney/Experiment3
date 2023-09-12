@@ -20,6 +20,7 @@ public class TrialRunner : MonoBehaviour
     [SerializeField] float displayTime = 0f;
     [SerializeField] float stimuliMovementDuration = .15f;
     float interTrialTime;
+    float stimuliDisplayDuration;
 
     // Stimuli Array Configuration
     StimuliController[] stimuliArrayAll;
@@ -48,7 +49,7 @@ public class TrialRunner : MonoBehaviour
         planePoints = FindObjectOfType<LocationCalculator>();
         GameObject arrayHolder = GameObject.FindGameObjectWithTag("Array");
         stimuliArrayAll = arrayHolder.GetComponentsInChildren<StimuliController>();
-
+        
         DisplayStimuli(false, stimuliArrayAll); // Make sure stimuli start hidden        
     }
 
@@ -69,13 +70,20 @@ public class TrialRunner : MonoBehaviour
     {
         LoadTrialData();
         yield return new WaitForSecondsRealtime(interTrialTime);
+        
         DisplayStimuli(true);
         TogglePreTargets(true);
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ProcessStimuliMovement());
+        
         TogglePreTargets(false);
         DisplayTargets(true);
-        yield return StartCoroutine(AwaitResponse());
+        waitingForResponse = true;
+
+        Coroutine responseRoutine = StartCoroutine(ResponsePhase());
+        yield return new WaitWhile(() => waitingForResponse);
+        StopCoroutine(responseRoutine);
+        
         SaveResults();
         CleanUp();
     }
@@ -83,7 +91,8 @@ public class TrialRunner : MonoBehaviour
     private void LoadTrialData()
     {
         Settings tinfo = currentTrial.settings;
-        interTrialTime = Session.instance.settings.GetFloat("interTrialTimeSec");
+        interTrialTime = tinfo.GetFloat("interTrialTimeSec");
+        stimuliDisplayDuration = tinfo.GetFloat("stimuliDisplayDuration");
         arrayConfiguration = tinfo.GetIntList("arrayConfiguration");
         loomingStim = stimuliArrayAll[tinfo.GetInt("loomingStimIndex")];
         recedingStim = stimuliArrayAll[tinfo.GetInt("recedingStimIndex")];
@@ -161,16 +170,15 @@ public class TrialRunner : MonoBehaviour
             stim.DisplayTarget(toggle, targetType: 0);
         }
     }
-
-    private IEnumerator AwaitResponse()
+    
+    private IEnumerator ResponsePhase()
     {
-        waitingForResponse = true; // Set to false in CheckInput()
-        while (waitingForResponse)
-        {
-            yield return null;
-        }
-    }
-
+        yield return new WaitForSecondsRealtime(stimuliDisplayDuration);
+        DisplayTargets(false);
+        TogglePreTargets(true);
+        yield return null;
+    } 
+    
     // Check current response values and save a response if given
     // Called as Unity Event via the Player Input inspector element
     public void CheckInput(InputAction.CallbackContext context)
@@ -212,6 +220,7 @@ public class TrialRunner : MonoBehaviour
     // Resets all objects and values for the next trial
     private void CleanUp()
     {
+        TogglePreTargets(false);
         DisplayStimuli(false);
         DisplayTargets(false);
         allTrialsComplete = currentTrial == Session.instance.CurrentBlock.lastTrial;
