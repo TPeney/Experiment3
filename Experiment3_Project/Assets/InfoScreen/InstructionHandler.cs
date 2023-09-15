@@ -28,6 +28,7 @@ public class InstructionHandler : MonoBehaviour
     Animator screenAnimation;
     ExperimentHandler expHandler;
 
+
     public bool IsShowingInstruction { get; private set; } = false;
     bool responseReceived = false;
 
@@ -73,13 +74,19 @@ public class InstructionHandler : MonoBehaviour
 
     // Helper methods to start the ShowInstructions coroutine with various params
     public void ShowCameraResetInstructions() { StartCoroutine(ShowInstructions(vrTeleport, resetCamera: true)); }
-    public void ShowExpInstructions() {
+    public void ShowExpInstructions()
+    {
+        StartCoroutine(ShowInstructions(expInstructions));
+    }
+
+    // Called from UXF Event
+    public void UpdateInstructionText()
+    {
         int controlScheme = Session.instance.settings.GetInt("controlScheme");
 
         if (controlScheme == 2) // Correct text for control scheme 1 set by default in inspector
         {
-            // TODO - If time, find a nicer way of doing this
-            expInstructions.text = 
+            expInstructions.text =
             "Your task is simple. You must determine which target letter is present:\n\n" +
             "S or H\n\n" +
             "If there is a 'S' - press right button.\n" +
@@ -93,7 +100,8 @@ public class InstructionHandler : MonoBehaviour
             VRHrightControllerText.text = "S ->";
             VRGrightControllerText.text = "S ->";
         }
-        StartCoroutine(ShowInstructions(expInstructions)); }
+    }
+
     public void ShowExpStart() { StartCoroutine(ShowInstructions(expStartText)); }
     public void ShowPracFailWarning() { StartCoroutine(ShowInstructions(pracFailInfo)); }
     public void ShowBreak() { StartCoroutine(ShowInstructions(breakText)); }
