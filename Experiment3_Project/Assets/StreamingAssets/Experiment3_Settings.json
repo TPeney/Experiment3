@@ -1,6 +1,6 @@
 {
     "isDebugging": false,
-    "controlScheme": 1, 
+    "controlScheme": 2, 
     "interTrialTimeSec": 0.5,  
     "numberOfBreaks": 3,
     "practiceBlockN": 16,
