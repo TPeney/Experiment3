@@ -1,4 +1,5 @@
 {
+    "runPractice": false,
     "isDebugging": false,
     "controlScheme": 1, 
     "interTrialTimeSec": 0.5,
@@ -6,5 +7,5 @@
     "numberOfBreaks": 3,
     "practiceBlockN": 16,
     "warmUpBlockN": 4,
-    "practicePassPercent": 80
+    "practicePassPercent": 1 
 }

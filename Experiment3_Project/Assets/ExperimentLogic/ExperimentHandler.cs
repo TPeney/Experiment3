@@ -54,8 +54,11 @@ public class ExperimentHandler : MonoBehaviour
         if (ActiveCamera != camera2D) { yield return StartCoroutine(ShowCameraResetInstructions()); }
 
         yield return StartCoroutine(ShowInstructions());
-
-        yield return StartCoroutine(RunPractice());
+        
+        if (Session.instance.settings.GetBool("runPractice"))
+        {
+            yield return StartCoroutine(RunPractice());
+        }
 
         if (isDebugging)
         {
@@ -127,7 +130,7 @@ public class ExperimentHandler : MonoBehaviour
         }
 
         int passTarget = exp.settings.GetInt("practicePassPercent");
-        int passRate = Mathf.RoundToInt((nCorrect / pracBlock.trials.Count) * 100);
+        int passRate = Mathf.RoundToInt(((float)nCorrect / pracBlock.trials.Count) * 100);
 
         return passRate >= passTarget;
     }
