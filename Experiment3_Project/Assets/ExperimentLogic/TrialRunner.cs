@@ -176,7 +176,8 @@ public class TrialRunner : MonoBehaviour
         yield return new WaitForSecondsRealtime(stimuliDisplayDuration);
         DisplayTargets(false);
         TogglePreTargets(true);
-        yield return null;
+        yield return new WaitForSecondsRealtime(4);
+        waitingForResponse = false;
     } 
     
     // Check current response values and save a response if given
