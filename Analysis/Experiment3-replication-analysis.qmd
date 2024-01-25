@@ -15,7 +15,6 @@ df.main <- readRDS("./data_processed/aggregated_behavioural_data")
 ```{r}
 desc.RT <- df.main |> 
   group_by(condition, trialType, arraySize) |>
-  mutate(accuracy = if_else(trialPassed, 1, 0)) |>
   summarise(mean.rt = mean(RT), mean.acc = mean(accuracy))
 ```
 

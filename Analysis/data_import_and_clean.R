@@ -22,6 +22,9 @@ data.cleaned <- data.raw |>
   select(experiment, ppid, session_num, trial_num_in_block, RT, trialType, arraySize, targetID, trialPassed, condition) |>
   # Transform from sec to ms
   mutate(RT = RT * 1000) |>
+  # Change accuracy from bool to int
+  mutate(accuracy = if_else(trialPassed, 1, 0),
+         .keep = "unused") |>
   # Sets an 'intrinsic order' for the conditions
   mutate(condition = factor(condition, levels = c("2D", "VRH", "VRG"))) |>
   # Remove erroneous data
